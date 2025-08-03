@@ -168,7 +168,7 @@ input:focus {
     align-items: center;
     gap: 16px;
     position: absolute;
-    top: 6%;
+    top: 1%;
     left: 0;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -317,12 +317,6 @@ input:focus {
     cursor: pointer;
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
-    box-shadow: 0 5px 15px 0 rgba(94, 114, 228, 0.3);
-}
-
-.login-submit-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 25px 0 rgba(94, 114, 228, 0.4);
 }
 
 .login-footer {
@@ -343,11 +337,6 @@ input:focus {
     font-weight: 600;
     text-decoration: none;
     transition: color 0.2s;
-}
-
-.login-footer-link:hover {
-    color: #357ABD;
-    text-decoration: none;
 }
 
 .signup-title {
@@ -417,12 +406,6 @@ input:focus {
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
     margin-top: 8px;
-    box-shadow: 0 5px 15px 0 rgba(94, 114, 228, 0.3);
-}
-
-.signup-submit-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 25px 0 rgba(94, 114, 228, 0.4);
 }
 
 /* Responsive design for login */
@@ -568,7 +551,6 @@ input:focus {
 .sidebar-item.active {
     background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
     color: #fff;
-    box-shadow: 0 4px 15px 0 rgba(94, 114, 228, 0.3);
 }
 
 .sidebar-item.active:hover {
@@ -611,7 +593,6 @@ input:focus {
 .sidebar-dropdown-toggle.active {
     background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
     color: #fff;
-    box-shadow: 0 4px 15px 0 rgba(94, 114, 228, 0.3);
 }
 
 .sidebar-dropdown-toggle.active:hover {
@@ -641,7 +622,6 @@ input:focus {
     top: 0;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(44, 62, 80, 0.15);
     padding: 8px 0;
     margin-left: 0;
     margin-top: 0;
@@ -714,12 +694,12 @@ input:focus {
 
 .sidebar-dropdown-child.active {
     background: rgba(94, 114, 228, 0.2);
-    color: #5e72e4;
+    color: #fff;
 }
 
 .sidebar-dropdown-child.active:hover {
     background: rgba(94, 114, 228, 0.2);
-    color: #5e72e4;
+    color: #fff;
 }
 
 .sidebar-dropdown-child-icon {
@@ -1000,7 +980,6 @@ input:focus {
     border: none;
     border-radius: 8px;
     padding: 12px 24px;
-    box-shadow: 0 5px 15px 0 rgba(94, 114, 228, 0.3);
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -1011,7 +990,6 @@ input:focus {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
-    padding: 0 0 16px 0;
     margin-bottom: 18px;
     display: flex;
     flex-direction: column;
@@ -1160,7 +1138,6 @@ input:focus {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 5px 15px 0 rgba(94, 114, 228, 0.3);
 }
 
 /* Parties icon button and error styles */
@@ -1280,6 +1257,349 @@ input:focus {
     }
 }
 
+/* ================= Modern Parties Table Styles ================= */
+.modern-table-container {
+    background: #fff;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+    border-top: none;
+}
+
+.modern-parties-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.table-header-cell {
+    background: #fff;
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 2px solid #f1f3f4;
+    font-weight: 600;
+    color: #374151;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-header-icon {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.table-header-text {
+    font-weight: 600;
+}
+
+.modern-table-row {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.modern-table-row:hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+}
+
+.modern-table-row:last-child {
+    border-bottom: none;
+}
+
+.table-cell {
+    padding: 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.name-cell {
+    min-width: 200px;
+}
+
+.name-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.party-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.name-info {
+    flex: 1;
+}
+
+.party-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+
+.party-type {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.contact-cell {
+    min-width: 140px;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.phone-number {
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.gst-info {
+    font-size: 11px;
+    color: #6b7280;
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.email-cell {
+    min-width: 180px;
+}
+
+.email-content {
+    display: flex;
+    align-items: center;
+}
+
+.email-text {
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.location-cell {
+    min-width: 120px;
+}
+
+.location-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.city {
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.state {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.balance-cell {
+    min-width: 140px;
+}
+
+.balance-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.balance-amount {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.balance-amount.positive {
+    color: #059669;
+}
+
+.balance-amount.negative {
+    color: #dc2626;
+}
+
+.balance-status {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.balance-amount.positive+.balance-status {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.balance-amount.negative+.balance-status {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.balance-amount:not(.positive):not(.negative)+.balance-status {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.actions-cell {
+    width: 100px;
+    text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+}
+
+.edit-btn {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.edit-btn:hover {
+    background: #bfdbfe;
+    transform: translateY(-1px);
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+    transform: translateY(-1px);
+}
+
+.no-data {
+    color: #9ca3af;
+    font-style: italic;
+    font-size: 13px;
+}
+
+.actions-column {
+    text-align: center;
+}
+
+/* Responsive Design for Modern Table */
+@media (max-width: 1200px) {
+    .table-cell {
+        padding: 16px 12px;
+    }
+
+    .party-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .party-name {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 992px) {
+    .modern-table-container {
+        overflow-x: auto;
+    }
+
+    .modern-parties-table {
+        min-width: 800px;
+    }
+
+    .table-header-cell,
+    .table-cell {
+        padding: 12px 8px;
+    }
+
+    .name-content {
+        gap: 8px;
+    }
+
+    .party-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-header-info {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .modern-parties-table {
+        min-width: 700px;
+    }
+
+    .table-header-content {
+        gap: 6px;
+    }
+
+    .table-header-icon {
+        display: none;
+    }
+
+    .action-buttons {
+        gap: 4px;
+    }
+
+    .action-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+    }
+}
+
+/* ================= End Modern Parties Table Styles ================= */
+
 /* ================= End Parties Table & Modal Styles ================= */
 
 /* ================= Parties Modal Row Layout ================= */
@@ -1395,12 +1715,6 @@ input:focus {
     display: flex;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
-}
-
-.profile-edit-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.15);
 }
 
 .profile-edit-actions {
@@ -1422,12 +1736,6 @@ input:focus {
     display: flex;
     align-items: center;
     gap: 4px;
-    box-shadow: 0 3px 10px 0 rgba(94, 114, 228, 0.3);
-}
-
-.profile-save-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px 0 rgba(94, 114, 228, 0.4);
 }
 
 .profile-cancel-btn {
@@ -1731,12 +2039,6 @@ input:focus {
     display: flex;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 5px 15px 0 rgba(94, 114, 228, 0.3);
-}
-
-.business-add-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 25px 0 rgba(94, 114, 228, 0.4);
 }
 
 .business-grid {
@@ -2055,7 +2357,6 @@ input:focus {
 
 .business-logo-upload-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.15);
 }
 
 .business-form-row {
@@ -2136,12 +2437,6 @@ input:focus {
     display: flex;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
-}
-
-.business-modal-submit:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.15);
 }
 
 /* Responsive Design for Business Page */
@@ -2424,7 +2719,7 @@ input:focus {
     min-height: 100dvh;
     height: 100dvh;
     background: #f1f3f6;
-    padding: 12px 24px;
+    padding-right: 24px;
     overflow: hidden;
 }
 
@@ -2537,7 +2832,6 @@ input:focus {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px 0 rgba(94, 114, 228, 0.3);
 }
 
 

@@ -46,7 +46,8 @@ module.exports.createTransaction = async (req, res) => {
             return res.status(400).json({ message: 'Amount must be greater than 0.' });
         }
 
-        const processedAmount = parseFloat(parseFloat(amount).toFixed(2));
+        // Simply use the amount as-is without any conversion
+        const processedAmount = Number(amount);
 
         const newTransaction = await Transaction.create({
             userId,
@@ -193,7 +194,9 @@ module.exports.updateTransaction = async (req, res) => {
 
         const updateData = {};
         if (type !== undefined) updateData.type = type;
-        if (amount !== undefined) updateData.amount = parseFloat(parseFloat(amount).toFixed(2));
+        if (amount !== undefined) {
+            updateData.amount = Number(amount);
+        }
         if (paymentMethod !== undefined) updateData.paymentMethod = paymentMethod;
         if (notes !== undefined) updateData.notes = notes;
         if (date !== undefined) updateData.date = new Date(date);

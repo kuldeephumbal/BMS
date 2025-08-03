@@ -224,16 +224,13 @@ export default function PartiesDetails() {
         }
 
         try {
-            // Use a more robust approach to handle decimal precision
-            const cleanAmount = parseFloat(transactionForm.amount).toFixed(2);
-            const processedAmount = parseFloat(cleanAmount);
-
+            // Send the amount directly without any processing
             const response = await axios.post('http://localhost:5000/api/transaction/create', {
                 userId: user._id,
                 businessId: activeBusinessId,
                 partyId: id,
                 ...transactionForm,
-                amount: processedAmount
+                amount: transactionForm.amount
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             }); if (response.status === 201) {
@@ -265,12 +262,10 @@ export default function PartiesDetails() {
         }
 
         try {
-            const cleanAmount = parseFloat(editTransactionForm.amount).toFixed(2);
-            const processedAmount = parseFloat(cleanAmount);
-
+            // Send the amount directly without any processing
             const response = await axios.put(`http://localhost:5000/api/transaction/update/${editTransactionForm.id}`, {
                 ...editTransactionForm,
-                amount: processedAmount
+                amount: editTransactionForm.amount
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });

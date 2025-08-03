@@ -6,9 +6,9 @@ require("dotenv").config();
 // 🟩 User Registration
 module.exports.registerUser = async (req, res) => {
     try {
-        const { name, email, password, phone } = req.body;
+        const { first_name, last_name, email, password, phone } = req.body;
 
-        if (!name || !email || !password || !phone) {
+        if (!first_name || !last_name || !email || !password || !phone) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
 
@@ -20,7 +20,7 @@ module.exports.registerUser = async (req, res) => {
 
         const admin_id = await Admin.findOne({ phone: "9725863699" });
 
-        const newUser = new User({ admin_id, name, email, password, phone });
+        const newUser = new User({ admin_id, first_name, last_name, email, password, phone });
         await newUser.save();
 
         res.status(201).json({ message: 'User registered successfully.' });
@@ -55,7 +55,8 @@ module.exports.loginUser = async (req, res) => {
             token,
             user: {
                 _id: user._id,
-                name: user.name,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 email: user.email,
                 phone: user.phone,
                 role: user.role
@@ -91,7 +92,7 @@ module.exports.getUserProfile = async (req, res) => {
 module.exports.updateUserProfile = async (req, res) => {
     try {
         const userId = req.user.id; // From auth middleware
-        const { name, email, phone, password } = req.body;
+        const { first_name, last_name, email, phone, password } = req.body;
 
         // Find user
         const user = await User.findById(userId);
@@ -117,7 +118,8 @@ module.exports.updateUserProfile = async (req, res) => {
 
         // Update fields
         const updateData = {};
-        if (name) updateData.name = name;
+        if (first_name) updateData.first_name = first_name;
+        if (last_name) updateData.last_name = last_name;
         if (email) updateData.email = email;
         if (phone) updateData.phone = phone;
         if (password) updateData.password = password;

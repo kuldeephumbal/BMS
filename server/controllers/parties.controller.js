@@ -1,4 +1,5 @@
 const Parties = require('../models/parties.modal');
+const Transaction = require('../models/transaction.modal');
 const mongoose = require('mongoose');
 
 // Create a new party (customer or supplier)
@@ -75,30 +76,130 @@ module.exports.getParties = async (req, res) => {
         if (!business_id || !type) {
             return res.status(400).json({ message: 'Business ID and type are required.' });
         }
-        const query = {
-            business_id,
-            type,
-            is_deleted: false
-        };
-        if (search) {
-            query.$or = [
-                { name: { $regex: search, $options: 'i' } },
-                { email: { $regex: search, $options: 'i' } },
-                { phone: { $regex: search, $options: 'i' } },
-                { address: { $regex: search, $options: 'i' } },
-                { gst_number: { $regex: search, $options: 'i' } },
-                { state: { $regex: search, $options: 'i' } },
-                { city: { $regex: search, $options: 'i' } },
-                { pin_code: { $regex: search, $options: 'i' } },
-                { notes: { $regex: search, $options: 'i' } }
-            ];
+
+        if (!mongoose.Types.ObjectId.isValid(business_id)) {
+            return res.status(400).json({ message: 'Invalid Business ID.' });
         }
+
+        if (!['customer', 'supplier'].includes(type)) {
+            return res.status(400).json({ message: 'Valid type (customer or supplier) is required.' });
+        }
+
         const skip = (parseInt(page) - 1) * parseInt(limit);
-        const parties = await Parties.find(query)
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(parseInt(limit));
-        const total = await Parties.countDocuments(query);
+
+        // Build aggregation pipeline to get parties with their calculated balances
+        const pipeline = [
+            {
+                $match: {
+                    business_id: new mongoose.Types.ObjectId(business_id),
+                    type,
+                    is_deleted: false
+                }
+            }
+        ];
+
+        // Add search filter
+        if (search) {
+            pipeline.push({
+                $match: {
+                    $or: [
+                        { name: { $regex: search, $options: 'i' } },
+                        { email: { $regex: search, $options: 'i' } },
+                        { phone: { $regex: search, $options: 'i' } },
+                        { address: { $regex: search, $options: 'i' } },
+                        { gst_number: { $regex: search, $options: 'i' } },
+                        { state: { $regex: search, $options: 'i' } },
+                        { city: { $regex: search, $options: 'i' } },
+                        { pin_code: { $regex: search, $options: 'i' } },
+                        { notes: { $regex: search, $options: 'i' } }
+                    ]
+                }
+            });
+        }
+
+        // Lookup transactions and calculate balance for each party
+        pipeline.push(
+            {
+                $lookup: {
+                    from: 'transactions',
+                    let: { partyId: '$_id', businessId: '$business_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$partyId', '$$partyId'] },
+                                        { $eq: ['$businessId', '$$businessId'] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'transactions'
+                }
+            },
+            {
+                $addFields: {
+                    balance: {
+                        $reduce: {
+                            input: '$transactions',
+                            initialValue: 0,
+                            in: {
+                                $cond: {
+                                    if: { $eq: ['$$this.type', 'gave'] },
+                                    then: { $subtract: ['$$value', '$$this.amount'] },
+                                    else: { $add: ['$$value', '$$this.amount'] }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    transactions: 0 // Remove transactions array from output
+                }
+            },
+            { $sort: { createdAt: -1 } },
+            { $skip: skip },
+            { $limit: parseInt(limit) }
+        );
+
+        const parties = await Parties.aggregate(pipeline);
+
+        // Get total count for pagination
+        const countPipeline = [
+            {
+                $match: {
+                    business_id: new mongoose.Types.ObjectId(business_id),
+                    type,
+                    is_deleted: false
+                }
+            }
+        ];
+
+        if (search) {
+            countPipeline.push({
+                $match: {
+                    $or: [
+                        { name: { $regex: search, $options: 'i' } },
+                        { email: { $regex: search, $options: 'i' } },
+                        { phone: { $regex: search, $options: 'i' } },
+                        { address: { $regex: search, $options: 'i' } },
+                        { gst_number: { $regex: search, $options: 'i' } },
+                        { state: { $regex: search, $options: 'i' } },
+                        { city: { $regex: search, $options: 'i' } },
+                        { pin_code: { $regex: search, $options: 'i' } },
+                        { notes: { $regex: search, $options: 'i' } }
+                    ]
+                }
+            });
+        }
+
+        countPipeline.push({ $count: 'total' });
+        const countResult = await Parties.aggregate(countPipeline);
+        const total = countResult.length > 0 ? countResult[0].total : 0;
+
         res.status(200).json({
             message: `${type.charAt(0).toUpperCase() + type.slice(1)}s retrieved successfully.`,
             parties,
@@ -106,10 +207,11 @@ module.exports.getParties = async (req, res) => {
                 currentPage: parseInt(page),
                 totalPages: Math.ceil(total / parseInt(limit)),
                 totalItems: total,
-                itemsPerPage: parseInt(limit)
-            }
+                itemsPerPage: parseInt(limit) 
+            } 
         });
     } catch (error) {
+        console.error('Error in getParties:', error);
         res.status(500).json({ message: 'Server error during parties retrieval.' });
     }
 };
@@ -118,12 +220,71 @@ module.exports.getParties = async (req, res) => {
 module.exports.getPartyById = async (req, res) => {
     try {
         const { id } = req.params;
-        const party = await Parties.findOne({ _id: id, is_deleted: false });
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid Party ID.' });
+        }
+
+        const pipeline = [
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(id),
+                    is_deleted: false
+                }
+            },
+            {
+                $lookup: {
+                    from: 'transactions',
+                    let: { partyId: '$_id', businessId: '$business_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$partyId', '$$partyId'] },
+                                        { $eq: ['$businessId', '$$businessId'] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'transactions'
+                }
+            },
+            {
+                $addFields: {
+                    balance: {
+                        $reduce: {
+                            input: '$transactions',
+                            initialValue: 0,
+                            in: {
+                                $cond: {
+                                    if: { $eq: ['$$this.type', 'gave'] },
+                                    then: { $subtract: ['$$value', '$$this.amount'] },
+                                    else: { $add: ['$$value', '$$this.amount'] }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    transactions: 0 // Remove transactions array from output
+                }
+            }
+        ];
+
+        const result = await Parties.aggregate(pipeline);
+        const party = result.length > 0 ? result[0] : null;
+
         if (!party) {
             return res.status(404).json({ message: 'Party not found.' });
         }
+
         res.status(200).json({ message: 'Party retrieved successfully.', party });
     } catch (error) {
+        console.error('Error in getPartyById:', error);
         res.status(500).json({ message: 'Server error during party retrieval.' });
     }
 };

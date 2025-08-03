@@ -6,7 +6,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Login() {
+export default function Auth() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,6 +19,7 @@ export default function Login() {
         firstName: '',
         lastName: '',
         email: '',
+        phone: '',
         password: '',
         confirmPassword: ''
     });
@@ -49,10 +50,11 @@ export default function Login() {
 
         try {
             const response = await axios.post(`${BASE_URL}/user/register`, {
-                firstName: signupData.firstName,
-                lastName: signupData.lastName,
+                first_name: signupData.firstName,
+                last_name: signupData.lastName,
                 email: signupData.email,
-                password: signupData.password
+                password: signupData.password,
+                phone: signupData.phone
             });
 
             if (response.status === 201) {
@@ -62,6 +64,7 @@ export default function Login() {
                     firstName: '',
                     lastName: '',
                     email: '',
+                    phone: '',
                     password: '',
                     confirmPassword: ''
                 });
@@ -106,41 +109,41 @@ export default function Login() {
                             </div>
                             <div>
                                 <div className="login-field-group form-group">
-                                <div className="login-password-wrapper form-group">
-                                    <input
-                                        id="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        className="login-input"
-                                        placeholder="Enter your password"
-                                        value={password}
-                                        onChange={e => setPassword(e.target.value)}
-                                        required
-                                    />
-                                    <label htmlFor="password" className="login-label">Password</label>
-                                    <button
-                                        type="button"
-                                        className="login-eye-btn"
-                                        onClick={() => setShowPassword((v) => !v)}
-                                        tabIndex={-1}
-                                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                                    >
-                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                    </button>
+                                    <div className="login-password-wrapper form-group">
+                                        <input
+                                            id="password"
+                                            type={showPassword ? 'text' : 'password'}
+                                            className="login-input"
+                                            placeholder="Enter your password"
+                                            value={password}
+                                            onChange={e => setPassword(e.target.value)}
+                                            required
+                                        />
+                                        <label htmlFor="password" className="login-label">Password</label>
+                                        <button
+                                            type="button"
+                                            className="login-eye-btn"
+                                            onClick={() => setShowPassword((v) => !v)}
+                                            tabIndex={-1}
+                                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                        >
+                                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                                <div className="form-check">
-                                    <input
-                                        id="rememberMe"
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        checked={rememberMe}
-                                        onChange={(e) => setRememberMe(e.target.checked)}
-                                    />
-                                    <label htmlFor="rememberMe" className="form-check-label">Remember Me</label>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                    <div className="form-check">
+                                        <input
+                                            id="rememberMe"
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            checked={rememberMe}
+                                            onChange={(e) => setRememberMe(e.target.checked)}
+                                        />
+                                        <label htmlFor="rememberMe" className="form-check-label">Remember Me</label>
+                                    </div>
+                                    <Link to="/forgot-password" className="login-forgot-password">Forgot Password?</Link>
                                 </div>
-                                <Link to="/forgot-password" className="login-forgot-password">Forgot Password?</Link>
-                            </div>
                             </div>
                             <button
                                 className="login-submit-btn"
@@ -202,6 +205,19 @@ export default function Login() {
                                 required
                             />
                             <label htmlFor="signupEmail" className="signup-label">Email</label>
+                        </div>
+
+                        <div className="signup-field-group form-group">
+                            <input
+                                id="signupPhone"
+                                type="tel"
+                                className="signup-input"
+                                placeholder="Enter your phone number"
+                                value={signupData.phone}
+                                onChange={e => handleSignupInputChange('phone', e.target.value)}
+                                required
+                            />
+                            <label htmlFor="signupPhone" className="signup-label">Phone Number</label>
                         </div>
 
                         <div className="signup-field-group form-group">

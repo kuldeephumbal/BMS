@@ -148,6 +148,7 @@ export default function Parties() {
             });
             if (response.status === 200) {
                 setParties(response.data.parties || []);
+                console.log(`Fetched ${partyType}s:`, response.data.parties);
                 setTotalPages(response.data.pagination?.totalPages || 1);
                 setTotalItems(response.data.pagination?.totalItems || 0);
             }
@@ -454,35 +455,118 @@ export default function Parties() {
                                     </div>
                                 </div>
                             ) : (
-                                <table className="parties-table table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Name</th>
-                                            <th>Phone</th>
-                                            <th>Address</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {parties.map((party, idx) => (
-                                            <tr key={party._id} className="parties-table-row" onClick={() => navigate(`/parties/${party._id}/details`)}>
-                                                <td>{(page - 1) * itemsPerPage + idx + 1}</td>
-                                                <td>{party.name}</td>
-                                                <td>{party.phone}</td>
-                                                <td>{party.address || '-'}</td>
-                                                <td onClick={(e) => e.stopPropagation()}>
-                                                    <button className="parties-icon-btn" title="Edit" onClick={() => handleOpenEdit(party)}>
-                                                        <FaEdit />
-                                                    </button>
-                                                    <button className="parties-icon-btn" title="Delete" onClick={() => handleDeleteParty(party._id)}>
-                                                        <FaTrash />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <>
+                                    <div className="modern-table-container">
+                                        <table className="modern-parties-table">
+                                            <thead>
+                                                <tr>
+                                                    <th className="table-header-cell">
+                                                        <div className="table-header-content">
+                                                            <FaUser className="table-header-icon" />
+                                                            <span className="table-header-text">Name</span>
+                                                        </div>
+                                                    </th>
+                                                    <th className="table-header-cell">
+                                                        <div className="table-header-content">
+                                                            <FaPhone className="table-header-icon" />
+                                                            <span className="table-header-text">Contact</span>
+                                                        </div>
+                                                    </th>
+                                                    <th className="table-header-cell">
+                                                        <div className="table-header-content">
+                                                            <FaEnvelope className="table-header-icon" />
+                                                            <span className="table-header-text">Email</span>
+                                                        </div>
+                                                    </th>
+                                                    <th className="table-header-cell">
+                                                        <div className="table-header-content">
+                                                            <FaMapMarkerAlt className="table-header-icon" />
+                                                            <span className="table-header-text">Location</span>
+                                                        </div>
+                                                    </th>
+                                                    <th className="table-header-cell">
+                                                        <div className="table-header-content">
+                                                            <span className="table-header-text">Balance</span>
+                                                        </div>
+                                                    </th>
+                                                    <th className="table-header-cell actions-column">
+                                                        <div className="table-header-content">
+                                                            <span className="table-header-text">Actions</span>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {parties.map((party, idx) => (
+                                                    <tr key={party._id} className="modern-table-row" onClick={() => navigate(`/parties/${party._id}/details`)}>
+                                                        <td className="table-cell name-cell">
+                                                            <div className="name-content">
+                                                                <div className="party-avatar">
+                                                                    {party.name.charAt(0).toUpperCase()}
+                                                                </div>
+                                                                <div className="name-info">
+                                                                    <div className="party-name">{party.name}</div>
+                                                                    <div className="party-type">
+                                                                        {party.type === 'customer' ? 'Customer' : 'Supplier'}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="table-cell contact-cell">
+                                                            <div className="contact-info">
+                                                                <div className="phone-number">{party.phone}</div>
+                                                                {party.gst_number && (
+                                                                    <div className="gst-info">GST: {party.gst_number}</div>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="table-cell email-cell">
+                                                            <div className="email-content">
+                                                                {party.email ? (
+                                                                    <span className="email-text">{party.email}</span>
+                                                                ) : (
+                                                                    <span className="no-data">No email</span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="table-cell location-cell">
+                                                            <div className="location-content">
+                                                                {party.city || party.state ? (
+                                                                    <>
+                                                                        {party.city && <div className="city">{party.city}</div>}
+                                                                        {party.state && <div className="state">{party.state}</div>}
+                                                                    </>
+                                                                ) : (
+                                                                    <span className="no-data">No location</span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="table-cell balance-cell">
+                                                            <div className="balance-content">
+                                                                <div className={`balance-amount ${party.balance >= 0 ? 'positive' : 'negative'}`}>
+                                                                    ₹{Math.abs(party.balance || 0).toLocaleString('en-IN')}
+                                                                </div>
+                                                                <div className="balance-status">
+                                                                    {party.balance > 0 ? 'To Receive' : party.balance < 0 ? 'To Pay' : 'Settled'}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="table-cell actions-cell" onClick={(e) => e.stopPropagation()}>
+                                                            <div className="action-buttons">
+                                                                <button className="action-btn edit-btn" title="Edit" onClick={() => handleOpenEdit(party)}>
+                                                                    <FaEdit />
+                                                                </button>
+                                                                <button className="action-btn delete-btn" title="Delete" onClick={() => handleDeleteParty(party._id)}>
+                                                                    <FaTrash />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </>
                             )}
                         </div>
 

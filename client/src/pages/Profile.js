@@ -17,7 +17,8 @@ export default function Profile() {
 
     // Form state for editing
     const [formData, setFormData] = useState({
-        name: '',
+        first_name: '',
+        last_name: '',
         email: '',
         phone: '',
         password: '',
@@ -75,13 +76,23 @@ export default function Profile() {
 
     const handleEdit = () => {
         setIsEditing(true);
+        // Initialize form data with current user data
+        setFormData({
+            first_name: user.first_name || '',
+            last_name: user.last_name || '',
+            email: user.email || '',
+            phone: user.phone || '',
+            password: '',
+            confirmPassword: ''
+        });
     };
 
     const handleCancel = () => {
         setIsEditing(false);
         // Reset form data to original values
         setFormData({
-            name: user.name || '',
+            first_name: user.first_name || '',
+            last_name: user.last_name || '',
             email: user.email || '',
             phone: user.phone || '',
             password: '',
@@ -97,15 +108,16 @@ export default function Profile() {
         }
 
         // Validate required fields
-        if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
-            toast.error('Name, email, and phone are required fields!');
+        if (!formData.first_name.trim() || !formData.last_name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+            toast.error('First name, last name, email, and phone are required fields!');
             return;
         }
 
         try {
             const token = localStorage.getItem('token');
             const updateData = {
-                name: formData.name.trim(),
+                first_name: formData.first_name.trim(),
+                last_name: formData.last_name.trim(),
                 email: formData.email.trim(),
                 phone: formData.phone.trim()
             };
@@ -123,6 +135,8 @@ export default function Profile() {
             });
 
             setUser(response.data.user);
+            // Update localStorage with new user data
+            localStorage.setItem('user', JSON.stringify(response.data.user));
             setIsEditing(false);
             toast.success('Profile updated successfully!');
 
@@ -220,24 +234,45 @@ export default function Profile() {
                                 <div className="profile-details">
                                     <div className="profile-detail-row">
                                         <div className="profile-detail-group">
-                                            <label className="profile-detail-label">Full Name</label>
+                                            <label className="profile-detail-label">First Name</label>
                                             {isEditing ? (
                                                 <input
                                                     type="text"
-                                                    name="name"
-                                                    value={formData.name}
+                                                    name="first_name"
+                                                    value={formData.first_name}
                                                     onChange={handleInputChange}
                                                     className="profile-input"
-                                                    placeholder="Enter your full name"
+                                                    placeholder="Enter your first name"
                                                 />
                                             ) : (
                                                 <div className="profile-detail-value">
                                                     <FaUser className="profile-detail-icon" />
-                                                    {user?.name || 'Not provided'}
+                                                    {user?.first_name || 'Not provided'}
                                                 </div>
                                             )}
                                         </div>
 
+                                        <div className="profile-detail-group">
+                                            <label className="profile-detail-label">Last Name</label>
+                                            {isEditing ? (
+                                                <input
+                                                    type="text"
+                                                    name="last_name"
+                                                    value={formData.last_name}
+                                                    onChange={handleInputChange}
+                                                    className="profile-input"
+                                                    placeholder="Enter your last name"
+                                                />
+                                            ) : (
+                                                <div className="profile-detail-value">
+                                                    <FaUser className="profile-detail-icon" />
+                                                    {user?.last_name || 'Not provided'}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="profile-detail-row">
                                         <div className="profile-detail-group">
                                             <label className="profile-detail-label">Email Address</label>
                                             {isEditing ? (
