@@ -166,8 +166,8 @@ export default function Sidebar({ open }) {
                             alt={activeBusiness.business_name}
                             className="sidebar-business-logo"
                             style={{
-                                width: open ? 50 : 40,
-                                height: open ? 50 : 40,
+                                width: open ? 80 : 70,
+                                height: open ? 80 : 70,
                                 borderRadius: '8px',
                                 objectFit: 'cover',
                                 transition: 'all 0.3s ease'
