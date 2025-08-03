@@ -19,6 +19,7 @@ import {
     FaArrowDown,
     FaBalanceScale,
     FaListAlt,
+    FaTimes
 } from 'react-icons/fa';
 
 export default function PartiesDetails() {
@@ -612,32 +613,41 @@ export default function PartiesDetails() {
 
                         {/* Add Transaction Modal */}
                         {transactionModalOpen && (
-                            <div className="parties-modal-backdrop" onClick={() => setTransactionModalOpen(false)}>
-                                <div className="parties-modal" onClick={e => e.stopPropagation()}>
-                                    <h3 className="parties-modal-title">Add Transaction</h3>
-                                    <form onSubmit={handleAddTransaction} className="parties-modal-form">
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">
+                            <div className="main-data-modal-backdrop" onClick={() => setTransactionModalOpen(false)}>
+                                <div className="main-data-modal" onClick={e => e.stopPropagation()}>
+                                    <div className="main-data-modal-header">
+                                        <h3 className="main-data-modal-title">Add Transaction</h3>
+                                        <button
+                                            type="button"
+                                            className="main-data-modal-close"
+                                            onClick={() => setTransactionModalOpen(false)}
+                                        >
+                                            <FaTimes />
+                                        </button>
+                                    </div>
+                                    <form onSubmit={handleAddTransaction} className="main-data-modal-form">
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">
                                                 Transaction Type
                                                 <select
                                                     name="type"
                                                     value={transactionForm.type}
                                                     onChange={handleTransactionChange}
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     required
                                                 >
                                                     <option value="gave">Given (You gave money)</option>
                                                     <option value="got">Received (You received money)</option>
                                                 </select>
                                             </label>
-                                            <label className="parties-modal-label">
+                                            <label className="main-data-modal-label">
                                                 Amount (₹)
                                                 <input
                                                     type="number"
                                                     name="amount"
                                                     value={transactionForm.amount}
                                                     onChange={handleTransactionChange}
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -645,13 +655,13 @@ export default function PartiesDetails() {
                                                 />
                                             </label>
                                         </div>
-                                        <label className="parties-modal-label">
+                                        <label className="main-data-modal-label">
                                             Payment Method
                                             <select
                                                 name="paymentMethod"
                                                 value={transactionForm.paymentMethod}
                                                 onChange={handleTransactionChange}
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 required
                                             >
                                                 <option value="cash">Cash</option>
@@ -660,29 +670,29 @@ export default function PartiesDetails() {
                                                 <option value="other">Other</option>
                                             </select>
                                         </label>
-                                        <label className="parties-modal-label">
+                                        <label className="main-data-modal-label">
                                             Date
                                             <input
                                                 type="date"
                                                 name="date"
                                                 value={transactionForm.date}
                                                 onChange={handleTransactionChange}
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 required
                                             />
                                         </label>
-                                        <label className="parties-modal-label">
+                                        <label className="main-data-modal-label">
                                             Notes
                                             <textarea
                                                 name="notes"
                                                 value={transactionForm.notes}
                                                 onChange={handleTransactionChange}
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 rows="3"
                                                 placeholder="Optional notes about this transaction"
                                             />
                                         </label>
-                                        <div className="parties-modal-actions">
+                                        <div className="main-data-modal-actions">
                                             <button
                                                 type="button"
                                                 className="btn-cancel"
@@ -701,32 +711,41 @@ export default function PartiesDetails() {
 
                         {/* Edit Transaction Modal */}
                         {editTransactionModalOpen && (
-                            <div className="parties-modal-backdrop" onClick={() => setEditTransactionModalOpen(false)}>
-                                <div className="parties-modal" onClick={e => e.stopPropagation()}>
-                                    <h3 className="parties-modal-title">Edit Transaction</h3>
-                                    <form onSubmit={handleEditTransaction} className="parties-modal-form">
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">
+                            <div className="main-data-modal-backdrop" onClick={() => setEditTransactionModalOpen(false)}>
+                                <div className="main-data-modal" onClick={e => e.stopPropagation()}>
+                                    <div className="main-data-modal-header">
+                                        <h3 className="main-data-modal-title">Edit Transaction</h3>
+                                        <button
+                                            type="button"
+                                            className="main-data-modal-close"
+                                            onClick={() => setEditTransactionModalOpen(false)}
+                                        >
+                                            <FaTimes />
+                                        </button>
+                                    </div>
+                                    <form onSubmit={handleEditTransaction} className="main-data-modal-form">
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">
                                                 Transaction Type
                                                 <select
                                                     name="type"
                                                     value={editTransactionForm.type}
                                                     onChange={handleEditTransactionChange}
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     required
                                                 >
                                                     <option value="gave">Given (You gave money)</option>
                                                     <option value="got">Received (You received money)</option>
                                                 </select>
                                             </label>
-                                            <label className="parties-modal-label">
+                                            <label className="main-data-modal-label">
                                                 Amount (₹)
                                                 <input
                                                     type="number"
                                                     name="amount"
                                                     value={editTransactionForm.amount}
                                                     onChange={handleEditTransactionChange}
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -734,13 +753,13 @@ export default function PartiesDetails() {
                                                 />
                                             </label>
                                         </div>
-                                        <label className="parties-modal-label">
+                                        <label className="main-data-modal-label">
                                             Payment Method
                                             <select
                                                 name="paymentMethod"
                                                 value={editTransactionForm.paymentMethod}
                                                 onChange={handleEditTransactionChange}
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 required
                                             >
                                                 <option value="cash">Cash</option>
@@ -749,29 +768,29 @@ export default function PartiesDetails() {
                                                 <option value="other">Other</option>
                                             </select>
                                         </label>
-                                        <label className="parties-modal-label">
+                                        <label className="main-data-modal-label">
                                             Date
                                             <input
                                                 type="date"
                                                 name="date"
                                                 value={editTransactionForm.date}
                                                 onChange={handleEditTransactionChange}
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 required
                                             />
                                         </label>
-                                        <label className="parties-modal-label">
+                                        <label className="main-data-modal-label">
                                             Notes
                                             <textarea
                                                 name="notes"
                                                 value={editTransactionForm.notes}
                                                 onChange={handleEditTransactionChange}
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 rows="3"
                                                 placeholder="Optional notes about this transaction"
                                             />
                                         </label>
-                                        <div className="parties-modal-actions">
+                                        <div className="main-data-modal-actions">
                                             <button
                                                 type="button"
                                                 className="btn-cancel"

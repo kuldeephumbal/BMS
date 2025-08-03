@@ -1241,317 +1241,436 @@ input:focus {
 
 /* ================= End Main Layout Styles ================= */
 
-/* ================= Parties Table & Modal Styles ================= */
-
-.parties-header-row {
+/* ================= Common Data Management Layout Styles ================= */
+/* 
+    Unified CSS classes for data management pages (Parties, Staff, etc.)
+    Main class prefix: main-data-*
+    
+    Components using these classes:
+    - Parties.js (Customers/Suppliers management)
+    - StaffManagement.js (Staff management)
+    
+    Key classes:
+    - main-data-header-row: Page header with title and actions
+    - main-data-page-title: Main page heading
+    - main-data-table-wrapper: Table container with styling
+    - main-data-table: Common table styling
+    - main-data-table-row: Interactive table rows
+    - main-data-modal-*: Modal components (backdrop, form, inputs, actions)
+    - main-data-icon-btn: Small action buttons
+*/
+/* Header Row - Used for page title and action buttons */
+.main-data-header-row {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-bottom: 18px;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
-.parties-page-title {
-    font-size: 1.5rem;
+/* Page Title - Main heading for data pages */
+.main-data-page-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Table Wrapper - Container for responsive tables */
+.main-data-table-wrapper {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+/* Data Table - Common table styling */
+.main-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.main-data-table th {
+    background: #f8f9fa;
+    text-align: left;
     font-weight: 600;
-    color: #1a1d29;
+    color: #495057;
+    border-bottom: 2px solid #e9ecef;
+    font-size: 0.85rem;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.parties-table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
-    margin-bottom: 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+.main-data-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #f1f3f4;
+    color: #495057;
+    vertical-align: middle;
 }
 
-.parties-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 1rem;
-    background: transparent;
-}
-
-.parties-table th,
-.parties-table td {
-    padding: 16px 18px;
-    text-align: left;
-    border-bottom: 1px solid #f0f2f5;
-    color: #1a1d29;
-    font-size: 14px;
-}
-
-.parties-table th {
-    background: #f8f9fa;
-    font-weight: 600;
-    color: #1a1d29;
-    letter-spacing: 0.3px;
-    font-size: 13px;
-    text-transform: uppercase;
-}
-
-.parties-table tr:last-child td {
+.main-data-table tr:last-child td {
     border-bottom: none;
 }
 
-.parties-table-row {
+/* Table Row - Interactive row styling */
+.main-data-table-row {
+    transition: all 0.2s ease;
     cursor: pointer;
-    transition: background-color 0.2s ease;
 }
 
-.parties-table-row:hover {
+.main-data-table-row:hover {
     background-color: #f8f9fa;
 }
 
-.parties-modal-backdrop {
+/* Modal Styles - Common modal components */
+.main-data-modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background: rgba(44, 62, 80, 0.18);
-    z-index: 2000;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2000;
+    padding: 20px;
 }
 
-.parties-modal {
+.main-data-modal {
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.25);
-    padding: 32px 28px 22px 28px;
-    width: 40%;
+    border-radius: 18px;
+    box-shadow: 0 4px 32px rgba(44, 62, 80, 0.13);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    animation: modalSlideIn 0.3s ease-out;
 }
 
-.parties-modal-title {
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.main-data-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 28px 16px 28px;
+    border-bottom: 1px solid #f0f2f5;
+    background: #f8fafc;
+}
+
+.main-data-modal-title {
     font-size: 1.3rem;
-    font-weight: 600;
-    color: #1a1d29;
-    margin-bottom: 8px;
+    font-weight: 700;
+    color: #2d3a4a;
+    margin: 0;
     letter-spacing: 0.3px;
 }
 
-.parties-modal-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.parties-modal-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1a1d29;
-    margin-bottom: 2px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.parties-modal-input {
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: 8px;
-    border: 1px solid #e6ecf0;
-    background: #fff;
-    font-size: 14px;
-    color: #1a1d29;
-    outline: none;
-    transition: all 0.2s ease;
-    font-weight: 400;
-}
-
-.parties-modal-input:focus {
-    border: 1px solid #5e72e4;
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
-}
-
-.parties-modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 8px;
-}
-
-/* Parties icon button and error styles */
-.parties-icon-btn {
+.main-data-modal-close {
     background: none;
     border: none;
-    color: #1a1d29;
-    font-size: 16px;
-    margin: 0 4px;
-    cursor: pointer;
-    padding: 6px 8px;
+    color: #7b7b93;
+    font-size: 1.2rem;
+    padding: 4px;
     border-radius: 6px;
-    transition: all 0.15s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.parties-modal-error {
-    color: #e94f4f;
-    font-size: 0.98rem;
-    margin-bottom: 4px;
-    margin-top: -4px;
-    font-weight: 500;
-    letter-spacing: 0.2px;
-}
-
-/* Parties pagination styles */
-.parties-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 2px;
-    margin: 0;
-    position: absolute;
-    left: 0;
-    right: 30px;
-    bottom: 5px;
-    padding-right: 40px;
-    background: transparent;
-    z-index: 2;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 12px;
-}
-
-.parties-pagination-arrow {
-    background: transparent;
-    color: #9ca3af;
-    border: none;
-    border-radius: 9px;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.parties-pagination-arrow:disabled {
-    color: #4b5563;
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-
-.parties-pagination-arrow:not(:disabled):hover {
-    background: #374151;
-    color: #d1d5db;
-}
-
-.parties-pagination-page {
-    background: transparent;
-    border: none;
-    color: #d1d5db;
-    font-size: 0.9rem;
-    font-weight: 500;
-    border-radius: 9px;
-    width: 32px;
-    height: 32px;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin: 0 2px;
 }
 
-.parties-pagination-page.active {
-    background: #4b5563;
-    color: #ffffff;
+.main-data-modal-close:hover {
+    background: #f0f2f5;
+    color: #232526;
+}
+
+.main-data-modal-form {
+    padding: 24px 28px;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.main-data-modal-form::-webkit-scrollbar {
+    display: none;
+}
+
+/* Modal Form Row - Two column layout for forms */
+.main-data-modal-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+.main-data-modal-label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     font-weight: 600;
+    color: #2d3a4a;
+    font-size: 0.9rem;
 }
 
-.parties-pagination-page:not(.active):hover {
-    background: #374151;
-    color: #ffffff;
-}
-
-.parties-pagination-info {
-    font-size: 0.95rem;
-    color: #9ca3af;
+.main-data-modal-input {
+    padding: 12px 16px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    outline: none;
+    background: #f8fafc;
+    color: #232526;
     font-weight: 500;
-    margin: 0 4px;
+}
+
+.main-data-modal-input:focus {
+    border-color: #232526;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(35, 37, 38, 0.1);
+}
+
+/* Modal Actions - Button container */
+.main-data-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 28px 24px 28px;
+    border-top: 1px solid #f0f2f5;
+    background: #f8fafc;
+}
+
+/* Icon Button - Small action buttons */
+.main-data-icon-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
+
+.main-data-icon-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+}
+
+/* Error Message */
+.main-data-modal-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 1px solid #f5c6cb;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+/* Responsive Design for Data Management */
+@media (max-width: 768px) {
+    .main-data-header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .main-data-page-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .main-data-modal {
+        margin: 10px;
+        max-width: none;
+    }
+
+    .main-data-modal-header {
+        padding: 20px 20px 12px 20px;
+    }
+
+    .main-data-modal-form {
+        padding: 20px;
+    }
+
+    .main-data-modal-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .main-data-modal-actions {
+        flex-direction: column-reverse;
+        gap: 8px;
+        padding: 12px 20px 20px 20px;
+    }
+
+    .main-data-table th,
+    .main-data-table td {
+        padding: 10px 8px;
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 480px) {
-    .parties-modal {
-        min-width: 0;
-        padding: 18px 4px 10px 4px;
+    .main-data-modal-header {
+        padding: 16px 16px 8px 16px;
     }
 
-    .parties-table th,
-    .parties-table td {
-        padding: 10px 6px;
+    .main-data-modal-title {
+        font-size: 1.1rem;
+    }
+
+    .main-data-modal-form {
+        padding: 16px;
+    }
+
+    .main-data-modal-actions {
+        padding: 8px 16px 16px 16px;
+    }
+
+    .main-data-modal-actions {
+        padding: 0 20px 20px;
     }
 }
 
-/* ================= Modern Parties Table Styles ================= */
-.modern-table-container {
+/* Pagination Styles - Common pagination for data tables */
+.main-data-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 16px 0;
+}
+
+.main-data-pagination-arrow {
     background: #fff;
-    border-radius: 0 0 12px 12px;
-    overflow: hidden;
-    border: 1px solid #e9ecef;
-    border-top: none;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
-.modern-parties-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
+.main-data-pagination-arrow:disabled {
+    background: #f8f9fa;
+    color: #adb5bd;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+}
+
+.main-data-pagination-arrow:not(:disabled):hover {
+    background: #5e72e4;
+    color: #fff;
+    border-color: #5e72e4;
+    transform: translateY(-1px);
+}
+
+.main-data-pagination-page {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-width: 40px;
+    text-align: center;
+}
+
+.main-data-pagination-page.active {
+    background: #5e72e4;
+    color: #fff;
+    border-color: #5e72e4;
+}
+
+.main-data-pagination-page:not(.active):hover {
+    background: #f8f9fa;
+    transform: translateY(-1px);
+}
+
+.main-data-pagination-info {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-left: 16px;
+}
+
+/* Modern Data Table - Enhanced table styling */
+.modern-data-table {
+    min-width: 800px;
 }
 
 .table-header-cell {
-    background: #fff;
-    padding: 16px 20px;
-    text-align: left;
-    border-bottom: 2px solid #f1f3f4;
-    font-weight: 600;
-    color: #374151;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 0;
+    border: none;
+    position: relative;
 }
 
 .table-header-content {
     display: flex;
     align-items: center;
     gap: 8px;
+    padding: 16px 12px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #dee2e6;
 }
 
 .table-header-icon {
-    font-size: 12px;
-    color: #6b7280;
+    color: #6c757d;
+    font-size: 14px;
 }
 
 .table-header-text {
-    font-weight: 600;
+    flex: 1;
 }
 
 .modern-table-row {
-    cursor: pointer;
     transition: all 0.2s ease;
     border-bottom: 1px solid #f1f3f4;
 }
 
 .modern-table-row:hover {
-    background: #f8f9fa;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .modern-table-row:last-child {
@@ -1559,10 +1678,36 @@ input:focus {
 }
 
 .table-cell {
-    padding: 20px;
+    padding: 16px 12px;
     vertical-align: middle;
-    border-bottom: 1px solid #f1f3f4;
+    color: #495057;
+    border: none;
 }
+
+/* Responsive Design for Pagination */
+@media (max-width: 480px) {
+    .main-data-pagination {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .main-data-pagination-arrow,
+    .main-data-pagination-page {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+        min-width: 32px;
+    }
+
+    .main-data-pagination-info {
+        margin-left: 0;
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
+
+/* ================= End Common Data Management Layout Styles ================= */
 
 .name-cell {
     min-width: 200px;
@@ -1841,75 +1986,6 @@ input:focus {
         font-size: 11px;
     }
 }
-
-/* ================= End Modern Parties Table Styles ================= */
-
-/* ================= End Parties Table & Modal Styles ================= */
-
-/* ================= Parties Modal Row Layout ================= */
-.parties-modal-row {
-    display: flex;
-    gap: 12px;
-}
-
-.parties-modal-row .parties-modal-label {
-    flex: 1;
-}
-
-@media (max-width: 768px) {
-    .parties-modal-row {
-        flex-direction: column;
-        gap: 8px;
-    }
-}
-
-/* ================= End Parties Modal Row Layout ================= */
-
-/* ================= Modal Scrollable Content ================= */
-.parties-modal {
-    display: flex;
-    flex-direction: column;
-    max-height: 70vh;
-    overflow: hidden;
-}
-
-.parties-modal-title {
-    flex-shrink: 0;
-}
-
-.parties-modal-form {
-    overflow-y: auto;
-    flex: 1 1 auto;
-    min-height: 0;
-    margin-bottom: 8px;
-    scrollbar-width: none;
-    /* Firefox */
-}
-
-.parties-modal-form::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, Edge */
-}
-
-.parties-modal-actions {
-    flex-shrink: 0;
-    background: #fff;
-}
-
-/* ================= End Modal Scrollable Content ================= */
-
-/* ================= Responsive Table ================= */
-@media (max-width: 992px) {
-    .parties-table-wrapper {
-        overflow-x: auto;
-    }
-
-    .parties-table {
-        min-width: 900px;
-    }
-}
-
-/* ================= End Responsive Table ================= */
 
 /* ================= Profile Button Styles (Keep these) ================= */
 .profile-edit-btn {
@@ -2517,9 +2593,9 @@ input:focus {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 24px;
-    padding-top: 16px;
+    padding: 16px 28px 24px 28px;
     border-top: 1px solid #f0f2f5;
+    background: #f8fafc;
 }
 
 /* Responsive Design for Business Page */

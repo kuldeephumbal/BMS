@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import ConfirmModal from '../components/ConfirmModal';
-import { FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaUser, FaPhone, FaEnvelope, FaMapMarkerAlt, FaSearch } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaUser, FaPhone, FaEnvelope, FaMapMarkerAlt, FaSearch, FaTimes } from 'react-icons/fa';
 
 export default function Parties() {
     const navigate = useNavigate();
@@ -369,8 +369,8 @@ export default function Parties() {
                     <div className="main-content-container">
                         <Header onToggleSidebar={handleToggleSidebar} />
                         <main className="main-content">
-                            <div className="parties-header-row">
-                                <h2 className="parties-page-title">{getPartyTypeLabelPlural()}</h2>
+                            <div className="main-data-header-row">
+                                <h2 className="main-data-page-title">{getPartyTypeLabelPlural()}</h2>
                             </div>
                             <div style={{ textAlign: 'center', padding: '40px' }}>
                                 <div>Loading {partyType}s...</div>
@@ -391,8 +391,8 @@ export default function Parties() {
                     <div className="main-content-container">
                         <Header onToggleSidebar={handleToggleSidebar} />
                         <main className="main-content">
-                            <div className="parties-header-row">
-                                <h2 className="parties-page-title">{getPartyTypeLabelPlural()}</h2>
+                            <div className="main-data-header-row">
+                                <h2 className="main-data-page-title">{getPartyTypeLabelPlural()}</h2>
                             </div>
                             <div style={{ textAlign: 'center', padding: '40px' }}>
                                 <div style={{ fontSize: '1.2rem', color: '#7b7b93', marginBottom: '10px' }}>
@@ -416,9 +416,9 @@ export default function Parties() {
                 <div className="main-content-container">
                     <Header onToggleSidebar={handleToggleSidebar} />
                     <main className="main-content">
-                        <div className="parties-header-row">
+                        <div className="main-data-header-row">
                             <div className='d-flex align-items-center justify-content-between gap-2'>
-                                <h2 className="parties-page-title">{getPartyTypeLabelPlural()}</h2>
+                                <h2 className="main-data-page-title">{getPartyTypeLabelPlural()}</h2>
                                 <div>
                                     <div style={{ position: 'relative', maxWidth: '400px' }}>
                                         <FaSearch
@@ -462,7 +462,7 @@ export default function Parties() {
                             </button>
                         </div>
 
-                        <div className="parties-table-wrapper">
+                        <div className="main-data-table-wrapper">
                             {parties.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '40px' }}>
                                     <div style={{ fontSize: '1.2rem', color: '#7b7b93', marginBottom: '10px' }}>
@@ -475,7 +475,7 @@ export default function Parties() {
                             ) : (
                                 <>
                                     <div className="modern-table-container">
-                                        <table className="modern-parties-table">
+                                        <table className="main-data-table modern-data-table">
                                             <thead>
                                                 <tr>
                                                     <th className="table-header-cell">
@@ -589,9 +589,9 @@ export default function Parties() {
                         </div>
 
                         {totalPages > 1 && (
-                            <div className="parties-pagination">
+                            <div className="main-data-pagination">
                                 <button
-                                    className="parties-pagination-arrow"
+                                    className="main-data-pagination-arrow"
                                     onClick={() => setPage(page - 1)}
                                     disabled={page === 1}
                                 >
@@ -599,17 +599,17 @@ export default function Parties() {
                                 </button>
                                 {getPageNumbers().map((p, idx) =>
                                     p === '...'
-                                        ? <span key={idx} className="parties-pagination-info">...</span>
+                                        ? <span key={idx} className="main-data-pagination-info">...</span>
                                         : <button
                                             key={p}
-                                            className={`parties-pagination-page${p === page ? ' active' : ''}`}
+                                            className={`main-data-pagination-page${p === page ? ' active' : ''}`}
                                             onClick={() => setPage(p)}
                                         >
                                             {p}
                                         </button>
                                 )}
                                 <button
-                                    className="parties-pagination-arrow"
+                                    className="main-data-pagination-arrow"
                                     onClick={() => setPage(page + 1)}
                                     disabled={page === totalPages}
                                 >
@@ -620,26 +620,35 @@ export default function Parties() {
 
                         {/* Add Party Modal */}
                         {modalOpen && (
-                            <div className="parties-modal-backdrop" onClick={() => setModalOpen(false)}>
-                                <div className="parties-modal" onClick={e => e.stopPropagation()}>
-                                    <h3 className="parties-modal-title">Add {getPartyTypeLabel()}</h3>
-                                    <form onSubmit={handleAddParty} className="parties-modal-form">
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">Name
+                            <div className="main-data-modal-backdrop" onClick={() => setModalOpen(false)}>
+                                <div className="main-data-modal" onClick={e => e.stopPropagation()}>
+                                    <div className="main-data-modal-header">
+                                        <h3 className="main-data-modal-title">Add {getPartyTypeLabel()}</h3>
+                                        <button
+                                            type="button"
+                                            className="main-data-modal-close"
+                                            onClick={() => setModalOpen(false)}
+                                        >
+                                            <FaTimes />
+                                        </button>
+                                    </div>
+                                    <form onSubmit={handleAddParty} className="main-data-modal-form">
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">Name
                                                 <input
                                                     type="text"
                                                     name="name"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={form.name}
                                                     onChange={handleChange}
                                                     required
                                                 />
                                             </label>
-                                            <label className="parties-modal-label">Phone
+                                            <label className="main-data-modal-label">Phone
                                                 <input
                                                     type="tel"
                                                     name="phone"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={form.phone}
                                                     onChange={handleChange}
                                                     required
@@ -648,66 +657,66 @@ export default function Parties() {
                                                 />
                                             </label>
                                         </div>
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">Email
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">Email
                                                 <input
                                                     type="email"
                                                     name="email"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={form.email}
                                                     onChange={handleChange}
                                                     placeholder="Optional"
                                                 />
                                             </label>
-                                            <label className="parties-modal-label">GST Number
+                                            <label className="main-data-modal-label">GST Number
                                                 <input
                                                     type="text"
                                                     name="gst_number"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={form.gst_number}
                                                     onChange={handleChange}
                                                     placeholder="Optional"
                                                 />
                                             </label>
                                         </div>
-                                        <label className="parties-modal-label">Address
+                                        <label className="main-data-modal-label">Address
                                             <textarea
                                                 name="address"
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 value={form.address}
                                                 onChange={handleChange}
                                                 rows="3"
                                                 placeholder="Full address"
                                             />
                                         </label>
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">State
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">State
                                                 <input
                                                     type="text"
                                                     name="state"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={form.state}
                                                     onChange={handleChange}
                                                     placeholder="State"
                                                 />
                                             </label>
-                                            <label className="parties-modal-label">City
+                                            <label className="main-data-modal-label">City
                                                 <input
                                                     type="text"
                                                     name="city"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={form.city}
                                                     onChange={handleChange}
                                                     placeholder="City"
                                                 />
                                             </label>
                                         </div>
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">PIN Code
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">PIN Code
                                                 <input
                                                     type="text"
                                                     name="pin_code"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={form.pin_code}
                                                     onChange={handleChange}
                                                     pattern="\d{6}"
@@ -716,18 +725,18 @@ export default function Parties() {
                                                 />
                                             </label>
                                         </div>
-                                        <label className="parties-modal-label">Notes
+                                        <label className="main-data-modal-label">Notes
                                             <textarea
                                                 name="notes"
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 value={form.notes}
                                                 onChange={handleChange}
                                                 rows="3"
                                                 placeholder={`Optional notes about the ${partyType}`}
                                             />
                                         </label>
-                                        {error && <div className="parties-modal-error">{error}</div>}
-                                        <div className="parties-modal-actions">
+                                        {error && <div className="main-data-modal-error">{error}</div>}
+                                        <div className="main-data-modal-actions">
                                             <button type="button" className="btn-cancel" onClick={() => setModalOpen(false)}>Cancel</button>
                                             <button type="submit" className="btn-submit">Add</button>
                                         </div>
@@ -738,26 +747,35 @@ export default function Parties() {
 
                         {/* Edit Party Modal */}
                         {editModalOpen && (
-                            <div className="parties-modal-backdrop" onClick={() => setEditModalOpen(false)}>
-                                <div className="parties-modal" onClick={e => e.stopPropagation()}>
-                                    <h3 className="parties-modal-title">Edit {getPartyTypeLabel()}</h3>
-                                    <form onSubmit={handleEditParty} className="parties-modal-form">
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">Name
+                            <div className="main-data-modal-backdrop" onClick={() => setEditModalOpen(false)}>
+                                <div className="main-data-modal" onClick={e => e.stopPropagation()}>
+                                    <div className="main-data-modal-header">
+                                        <h3 className="main-data-modal-title">Edit {getPartyTypeLabel()}</h3>
+                                        <button
+                                            type="button"
+                                            className="main-data-modal-close"
+                                            onClick={() => setModalOpen(false)}
+                                        >
+                                            <FaTimes />
+                                        </button>
+                                    </div>
+                                    <form onSubmit={handleEditParty} className="main-data-modal-form">
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">Name
                                                 <input
                                                     type="text"
                                                     name="name"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={editForm.name}
                                                     onChange={handleEditChange}
                                                     required
                                                 />
                                             </label>
-                                            <label className="parties-modal-label">Phone
+                                            <label className="main-data-modal-label">Phone
                                                 <input
                                                     type="tel"
                                                     name="phone"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={editForm.phone}
                                                     onChange={handleEditChange}
                                                     required
@@ -766,66 +784,66 @@ export default function Parties() {
                                                 />
                                             </label>
                                         </div>
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">Email
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">Email
                                                 <input
                                                     type="email"
                                                     name="email"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={editForm.email}
                                                     onChange={handleEditChange}
                                                     placeholder="Optional"
                                                 />
                                             </label>
-                                            <label className="parties-modal-label">GST Number
+                                            <label className="main-data-modal-label">GST Number
                                                 <input
                                                     type="text"
                                                     name="gst_number"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={editForm.gst_number}
                                                     onChange={handleEditChange}
                                                     placeholder="Optional"
                                                 />
                                             </label>
                                         </div>
-                                        <label className="parties-modal-label">Address
+                                        <label className="main-data-modal-label">Address
                                             <textarea
                                                 name="address"
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 value={editForm.address}
                                                 onChange={handleEditChange}
                                                 rows="3"
                                                 placeholder="Full address"
                                             />
                                         </label>
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">State
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">State
                                                 <input
                                                     type="text"
                                                     name="state"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={editForm.state}
                                                     onChange={handleEditChange}
                                                     placeholder="State"
                                                 />
                                             </label>
-                                            <label className="parties-modal-label">City
+                                            <label className="main-data-modal-label">City
                                                 <input
                                                     type="text"
                                                     name="city"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={editForm.city}
                                                     onChange={handleEditChange}
                                                     placeholder="City"
                                                 />
                                             </label>
                                         </div>
-                                        <div className="parties-modal-row">
-                                            <label className="parties-modal-label">PIN Code
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">PIN Code
                                                 <input
                                                     type="text"
                                                     name="pin_code"
-                                                    className="parties-modal-input"
+                                                    className="main-data-modal-input"
                                                     value={editForm.pin_code}
                                                     onChange={handleEditChange}
                                                     pattern="\d{6}"
@@ -834,18 +852,18 @@ export default function Parties() {
                                                 />
                                             </label>
                                         </div>
-                                        <label className="parties-modal-label">Notes
+                                        <label className="main-data-modal-label">Notes
                                             <textarea
                                                 name="notes"
-                                                className="parties-modal-input"
+                                                className="main-data-modal-input"
                                                 value={editForm.notes}
                                                 onChange={handleEditChange}
                                                 rows="3"
                                                 placeholder={`Optional notes about the ${partyType}`}
                                             />
                                         </label>
-                                        {editError && <div className="parties-modal-error">{editError}</div>}
-                                        <div className="parties-modal-actions">
+                                        {editError && <div className="main-data-modal-error">{editError}</div>}
+                                        <div className="main-data-modal-actions">
                                             <button type="button" className="btn-cancel" onClick={() => setEditModalOpen(false)}>Cancel</button>
                                             <button type="submit" className="btn-submit">Save</button>
                                         </div>

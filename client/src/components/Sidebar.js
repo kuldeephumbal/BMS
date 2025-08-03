@@ -11,7 +11,7 @@ const navItems = [
             { label: 'Suppliers', icon: <FaUserTie />, link: '/parties/supplier' },
         ]
     },
-    { label: 'Staff Managements', icon: <FaUsers /> },
+    { label: 'Staff Managements', icon: <FaUsers />, link: '/staff-management' },
     { label: 'Expanses & Budgets', icon: <FaWallet /> },
     {
         label: 'Products', icon: <FaBox />, children: [

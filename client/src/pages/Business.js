@@ -506,18 +506,18 @@ export default function Business() {
 
                         {/* Business Modal */}
                         {showModal && (
-                            <div className="business-modal-backdrop" onClick={handleCloseModal}>
-                                <div className="business-modal" onClick={(e) => e.stopPropagation()}>
-                                    <div className="business-modal-header">
-                                        <h2 className="business-modal-title">
+                            <div className="main-data-modal-backdrop" onClick={handleCloseModal}>
+                                <div className="main-data-modal" onClick={(e) => e.stopPropagation()}>
+                                    <div className="main-data-modal-header">
+                                        <h2 className="main-data-modal-title">
                                             {editingBusiness ? 'Edit Business' : 'Add New Business'}
                                         </h2>
-                                        <button className="business-modal-close" onClick={handleCloseModal}>
+                                        <button className="main-data-modal-close" onClick={handleCloseModal}>
                                             <FaTimes />
                                         </button>
                                     </div>
 
-                                    <form className="business-modal-form" onSubmit={handleSubmit}>
+                                    <form className="main-data-modal-form" onSubmit={handleSubmit}>
                                         <div className="business-logo-upload">
                                             <label className="business-logo-label">Business Logo</label>
                                             <div className="business-logo-preview">
@@ -541,86 +541,86 @@ export default function Business() {
                                             </div>
                                         </div>
 
-                                        <div className="business-form-row">
-                                            <div className="business-form-group">
-                                                <label className="business-form-label">Business Name *</label>
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">
+                                                Business Name *
                                                 <input
                                                     type="text"
                                                     name="business_name"
                                                     value={formData.business_name}
                                                     onChange={handleInputChange}
-                                                    className="business-form-input"
+                                                    className="main-data-modal-input"
                                                     placeholder="Enter business name"
                                                     required
                                                 />
-                                            </div>
+                                            </label>
                                         </div>
 
-                                        <div className="business-form-row">
-                                            <div className="business-form-group">
-                                                <label className="business-form-label">Address</label>
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">
+                                                Address
                                                 <input
                                                     type="text"
                                                     name="address"
                                                     value={formData.address}
                                                     onChange={handleInputChange}
-                                                    className="business-form-input"
+                                                    className="main-data-modal-input"
                                                     placeholder="Enter business address"
                                                 />
-                                            </div>
+                                            </label>
                                         </div>
 
-                                        <div className="business-form-row">
-                                            <div className="business-form-group">
-                                                <label className="business-form-label">City</label>
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">
+                                                City
                                                 <input
                                                     type="text"
                                                     name="city"
                                                     value={formData.city}
                                                     onChange={handleInputChange}
-                                                    className="business-form-input"
+                                                    className="main-data-modal-input"
                                                     placeholder="Enter city"
                                                 />
-                                            </div>
-                                            <div className="business-form-group">
-                                                <label className="business-form-label">State</label>
+                                            </label>
+                                            <label className="main-data-modal-label">
+                                                State
                                                 <input
                                                     type="text"
                                                     name="state"
                                                     value={formData.state}
                                                     onChange={handleInputChange}
-                                                    className="business-form-input"
+                                                    className="main-data-modal-input"
                                                     placeholder="Enter state"
                                                 />
-                                            </div>
+                                            </label>
                                         </div>
 
-                                        <div className="business-form-row">
-                                            <div className="business-form-group">
-                                                <label className="business-form-label">PIN Code</label>
+                                        <div className="main-data-modal-row">
+                                            <label className="main-data-modal-label">
+                                                PIN Code
                                                 <input
                                                     type="text"
                                                     name="pin_code"
                                                     value={formData.pin_code}
                                                     onChange={handleInputChange}
-                                                    className="business-form-input"
+                                                    className="main-data-modal-input"
                                                     placeholder="Enter PIN code"
                                                 />
-                                            </div>
-                                            <div className="business-form-group">
-                                                <label className="business-form-label">GST Number</label>
+                                            </label>
+                                            <label className="main-data-modal-label">
+                                                GST Number
                                                 <input
                                                     type="text"
                                                     name="gst_number"
                                                     value={formData.gst_number}
                                                     onChange={handleInputChange}
-                                                    className="business-form-input"
+                                                    className="main-data-modal-input"
                                                     placeholder="Enter GST number"
                                                 />
-                                            </div>
+                                            </label>
                                         </div>
 
-                                        <div className="business-modal-actions">
+                                        <div className="main-data-modal-actions">
                                             <button type="button" className="btn-cancel" onClick={handleCloseModal}>
                                                 Cancel
                                             </button>
