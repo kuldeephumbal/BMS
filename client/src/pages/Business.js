@@ -9,7 +9,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Business() {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+        const saved = localStorage.getItem('sidebarOpen');
+        return saved !== null ? JSON.parse(saved) : true;
+    });
     const [businesses, setBusinesses] = useState([]);
     const [activeBusiness, setActiveBusiness] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -32,7 +35,13 @@ export default function Business() {
         gst_number: ''
     });
 
-    const handleToggleSidebar = () => setSidebarOpen(!sidebarOpen);
+    const handleToggleSidebar = () => {
+        const newState = !sidebarOpen;
+        setSidebarOpen(newState);
+        localStorage.setItem('sidebarOpen', JSON.stringify(newState));
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('sidebarToggle', { detail: { isOpen: newState } }));
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -50,17 +59,25 @@ export default function Business() {
 
         fetchBusinesses();
         fetchActiveBusiness();
+
+        // Listen for sidebar toggle events from other components
+        const handleSidebarToggle = (event) => {
+            setSidebarOpen(event.detail.isOpen);
+        };
+
+        window.addEventListener('sidebarToggle', handleSidebarToggle);
+        return () => window.removeEventListener('sidebarToggle', handleSidebarToggle);
     }, [navigate]);
 
     const fetchActiveBusiness = async () => {
         try {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            
+
             if (!user._id) {
                 return;
             }
-            
+
             const response = await axios.get(`http://localhost:5000/api/business/active/${user._id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -70,7 +87,7 @@ export default function Business() {
 
             const activeBusinessData = response.data.business;
             setActiveBusiness(activeBusinessData);
-            
+
             // Store only active business ID in localStorage
             localStorage.setItem('activeBusinessId', activeBusinessData._id);
         } catch (error) {
@@ -83,14 +100,14 @@ export default function Business() {
         try {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            
+
             if (!user._id) {
                 setError('User data not found. Please login again.');
                 toast.error('User data not found. Please login again.');
                 setLoading(false);
                 return;
             }
-            
+
             const response = await axios.get(`http://localhost:5000/api/business/get/${user._id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -104,9 +121,9 @@ export default function Business() {
                 if (!a.is_active && b.is_active) return 1;
                 return 0;
             });
-            
+
             setBusinesses(sortedBusinesses);
-            
+
             // Debug: Log business data to check logo URLs
             if (sortedBusinesses.length > 0) {
                 sortedBusinesses.forEach(business => {
@@ -182,13 +199,13 @@ export default function Business() {
         try {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            
+
             if (!user._id) {
                 toast.error('User data not found. Please login again.');
                 return;
             }
-            
-            await axios.put(`http://localhost:5000/api/business/activate/${businessId}`, 
+
+            await axios.put(`http://localhost:5000/api/business/activate/${businessId}`,
                 { user_id: user._id },
                 {
                     headers: {
@@ -201,10 +218,10 @@ export default function Business() {
             toast.success('Business activated successfully!');
             fetchBusinesses();
             fetchActiveBusiness();
-            
+
             // Dispatch custom event to notify other components
             window.dispatchEvent(new CustomEvent('activeBusinessChanged'));
-            
+
             // Update localStorage with new active business ID
             localStorage.setItem('activeBusinessId', businessId);
         } catch (error) {
@@ -241,7 +258,7 @@ export default function Business() {
             fetchBusinesses();
             fetchActiveBusiness();
             window.dispatchEvent(new CustomEvent('activeBusinessChanged'));
-            
+
             // Clear localStorage if the deleted business was active
             const storedActiveBusinessId = localStorage.getItem('activeBusinessId');
             if (storedActiveBusinessId === businessId) {
@@ -268,12 +285,12 @@ export default function Business() {
         try {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            
+
             if (!user._id) {
                 toast.error('User data not found. Please login again.');
                 return;
             }
-            
+
             const formDataToSend = new FormData();
             formDataToSend.append('user_id', user._id);
             formDataToSend.append('business_name', formData.business_name.trim());
@@ -282,7 +299,7 @@ export default function Business() {
             formDataToSend.append('state', formData.state.trim());
             formDataToSend.append('pin_code', formData.pin_code.trim());
             formDataToSend.append('gst_number', formData.gst_number.trim());
-            
+
             if (selectedFile) {
                 formDataToSend.append('logo', selectedFile);
             }
@@ -379,7 +396,7 @@ export default function Business() {
                                     <p className="business-subtitle">Manage your business profiles and information</p>
                                 </div>
                                 <div className="business-actions">
-                                    <button className="business-add-btn" onClick={handleAddBusiness}>
+                                    <button className="btn-primary-add" onClick={handleAddBusiness}>
                                         <FaPlus /> Add Business
                                     </button>
                                 </div>
@@ -393,7 +410,7 @@ export default function Business() {
                                         </div>
                                         <h3>No Businesses Found</h3>
                                         <p>Get started by adding your first business profile</p>
-                                        <button className="business-add-btn" onClick={handleAddBusiness}>
+                                        <button className="btn-primary-add" onClick={handleAddBusiness}>
                                             <FaPlus /> Add Your First Business
                                         </button>
                                     </div>
@@ -403,8 +420,8 @@ export default function Business() {
                                             <div className="business-card-header">
                                                 <div className="business-logo">
                                                     {business.logo_url ? (
-                                                        <img 
-                                                            src={`http://localhost:5000${business.logo_url}`} 
+                                                        <img
+                                                            src={`http://localhost:5000${business.logo_url}`}
                                                             alt={business.business_name}
                                                             className="business-logo-img"
                                                             onError={(e) => {
@@ -421,23 +438,23 @@ export default function Business() {
                                                 </div>
                                                 <div className="business-card-actions">
                                                     {!business.is_active && (
-                                                        <button 
-                                                            className="business-icon-btn business-activate-btn" 
+                                                        <button
+                                                            className="business-icon-btn business-activate-btn"
                                                             onClick={() => handleSetActiveBusiness(business._id)}
                                                             title="Set as Active Business"
                                                         >
                                                             <FaBuilding />
                                                         </button>
                                                     )}
-                                                    <button 
-                                                        className="business-icon-btn" 
+                                                    <button
+                                                        className="business-icon-btn"
                                                         onClick={() => handleEditBusiness(business)}
                                                         title="Edit Business"
                                                     >
                                                         <FaEdit />
                                                     </button>
-                                                    <button 
-                                                        className="business-icon-btn business-delete-btn" 
+                                                    <button
+                                                        className="business-icon-btn business-delete-btn"
                                                         onClick={() => handleDeleteBusiness(business._id)}
                                                         title="Delete Business"
                                                     >
@@ -445,10 +462,10 @@ export default function Business() {
                                                     </button>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="business-card-body">
                                                 <h3 className="business-name">{business.business_name}</h3>
-                                                
+
                                                 <div className="business-details">
                                                     {business.address && (
                                                         <div className="business-detail-item">
@@ -456,7 +473,7 @@ export default function Business() {
                                                             <span>{business.address}</span>
                                                         </div>
                                                     )}
-                                                    
+
                                                     {(business.city || business.state) && (
                                                         <div className="business-detail-item">
                                                             <FaMapMarkerAlt className="business-detail-icon" />
@@ -466,7 +483,7 @@ export default function Business() {
                                                             </span>
                                                         </div>
                                                     )}
-                                                    
+
                                                     {business.gst_number && (
                                                         <div className="business-detail-item">
                                                             <FaIdCard className="business-detail-icon" />
@@ -474,7 +491,7 @@ export default function Business() {
                                                         </div>
                                                     )}
                                                 </div>
-                                                
+
                                                 <div className="business-status">
                                                     <span className={`business-status-badge ${business.is_active ? 'active' : 'inactive'}`}>
                                                         {business.is_active ? '✓ Active' : 'Inactive'}
@@ -499,7 +516,7 @@ export default function Business() {
                                             <FaTimes />
                                         </button>
                                     </div>
-                                    
+
                                     <form className="business-modal-form" onSubmit={handleSubmit}>
                                         <div className="business-logo-upload">
                                             <label className="business-logo-label">Business Logo</label>
@@ -604,10 +621,10 @@ export default function Business() {
                                         </div>
 
                                         <div className="business-modal-actions">
-                                            <button type="button" className="business-modal-cancel" onClick={handleCloseModal}>
+                                            <button type="button" className="btn-cancel" onClick={handleCloseModal}>
                                                 Cancel
                                             </button>
-                                            <button type="submit" className="business-modal-submit">
+                                            <button type="submit" className="btn-submit">
                                                 {editingBusiness ? <><FaSave /> Update Business</> : <><FaPlus /> Create Business</>}
                                             </button>
                                         </div>
@@ -618,7 +635,7 @@ export default function Business() {
                     </main>
                 </div>
             </div>
-            
+
             {/* Confirm Modal */}
             <ConfirmModal
                 isOpen={showConfirmModal}
@@ -630,7 +647,7 @@ export default function Business() {
                 cancelText={confirmModalData.cancelText}
                 type={confirmModalData.type}
             />
-            
+
             <ToastContainer />
         </div>
     );

@@ -1,13 +1,30 @@
-import React, { useState, useRef } from 'react';
-import { FaBars, FaBell, FaSignOutAlt, FaUserCircle, FaUserEdit, FaBuilding } from 'react-icons/fa';
+import React, { useState, useRef, useEffect } from 'react';
+import { FaBars, FaBell, FaSignOutAlt, FaUserEdit, FaBuilding } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header({ onToggleSidebar }) {
     // Dropdown state for profile and notifications
     const [openDropdown, setOpenDropdown] = useState(null); // 'profile', 'notif', or null
+    const [user, setUser] = useState(null);
     const profileRef = useRef();
     const notifRef = useRef();
     const navigate = useNavigate();
+
+    // Get user data from localStorage
+    useEffect(() => {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            setUser(JSON.parse(userData));
+        }
+    }, []);
+
+    // Function to get user initials
+    const getUserInitials = () => {
+        if (!user) return 'U';
+        const firstName = user.first_name || '';
+        const lastName = user.last_name || '';
+        return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || 'U';
+    };
     // Close dropdowns on outside click
     React.useEffect(() => {
         function handleClick(e) {
@@ -17,29 +34,6 @@ export default function Header({ onToggleSidebar }) {
         document.addEventListener('mousedown', handleClick);
         return () => document.removeEventListener('mousedown', handleClick);
     }, [openDropdown]);
-
-    // Dropdown menu style (Material UI inspired)
-    const dropdownMenuStyle = {
-        minWidth: 200,
-        borderRadius: 14,
-        zIndex: 1200,
-        position: 'absolute',
-        background: '#fff',
-        boxShadow: '0 4px 24px rgba(44,62,80,0.13)',
-        padding: '8px 0',
-        border: 'none',
-        overflow: 'visible',
-    };
-
-    // Helper to get dropdown position
-    const getDropdownPosition = (ref, width = 200) => {
-        if (!ref.current) return { top: 70, left: 0 };
-        const rect = ref.current.getBoundingClientRect();
-        return {
-            top: rect.bottom + window.scrollY + 4,
-            left: rect.right - width + window.scrollX,
-        };
-    };
 
     return (
         <header className="header">
@@ -71,9 +65,11 @@ export default function Header({ onToggleSidebar }) {
                 </div>
                 {/* Profile Dropdown */}
                 <div>
-                    <button className="dropdown-toggle btn btn-link text-dark d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false"
+                    <button className="dropdown-toggle btn d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false"
                     >
-                        <FaUserCircle style={{ fontSize: 22 }} />
+                        <div className="user-initials-avatar">
+                            {getUserInitials()}
+                        </div>
                     </button>
                     <ul className="dropdown-menu">
                         <li><button className="dropdown-item" onClick={() => {

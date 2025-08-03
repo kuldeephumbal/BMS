@@ -26,7 +26,10 @@ export default function Parties() {
         }
     }
 
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+        const saved = localStorage.getItem('sidebarOpen');
+        return saved !== null ? JSON.parse(saved) : true;
+    });
     const [modalOpen, setModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [parties, setParties] = useState([]);
@@ -105,8 +108,17 @@ export default function Parties() {
             setActiveBusinessId(updatedActiveBusinessId);
         };
 
+        // Listen for sidebar toggle events from other components
+        const handleSidebarToggle = (event) => {
+            setSidebarOpen(event.detail.isOpen);
+        };
+
         window.addEventListener('activeBusinessChanged', handleActiveBusinessChange);
-        return () => window.removeEventListener('activeBusinessChanged', handleActiveBusinessChange);
+        window.addEventListener('sidebarToggle', handleSidebarToggle);
+        return () => {
+            window.removeEventListener('activeBusinessChanged', handleActiveBusinessChange);
+            window.removeEventListener('sidebarToggle', handleSidebarToggle);
+        };
     }, []);
 
     useEffect(() => {
@@ -162,7 +174,13 @@ export default function Parties() {
         }
     };
 
-    const handleToggleSidebar = () => setSidebarOpen(!sidebarOpen);
+    const handleToggleSidebar = () => {
+        const newState = !sidebarOpen;
+        setSidebarOpen(newState);
+        localStorage.setItem('sidebarOpen', JSON.stringify(newState));
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('sidebarToggle', { detail: { isOpen: newState } }));
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -345,12 +363,12 @@ export default function Parties() {
 
     if (loading && parties.length === 0) {
         return (
-            <div className="parties-layout-root">
-                <div className="parties-layout-row">
+            <div className="main-layout-root">
+                <div className="main-layout-row">
                     <Sidebar open={sidebarOpen} />
-                    <div className="parties-content-container">
+                    <div className="main-content-container">
                         <Header onToggleSidebar={handleToggleSidebar} />
-                        <main className="parties-content">
+                        <main className="main-content">
                             <div className="parties-header-row">
                                 <h2 className="parties-page-title">{getPartyTypeLabelPlural()}</h2>
                             </div>
@@ -367,12 +385,12 @@ export default function Parties() {
     // Show message if no active business
     if (!activeBusinessId) {
         return (
-            <div className="parties-layout-root">
-                <div className="parties-layout-row">
+            <div className="main-layout-root">
+                <div className="main-layout-row">
                     <Sidebar open={sidebarOpen} />
-                    <div className="parties-content-container">
+                    <div className="main-content-container">
                         <Header onToggleSidebar={handleToggleSidebar} />
-                        <main className="parties-content">
+                        <main className="main-content">
                             <div className="parties-header-row">
                                 <h2 className="parties-page-title">{getPartyTypeLabelPlural()}</h2>
                             </div>
@@ -392,12 +410,12 @@ export default function Parties() {
     }
 
     return (
-        <div className="parties-layout-root">
-            <div className="parties-layout-row">
+        <div className="main-layout-root">
+            <div className="main-layout-row">
                 <Sidebar open={sidebarOpen} />
-                <div className="parties-content-container">
+                <div className="main-content-container">
                     <Header onToggleSidebar={handleToggleSidebar} />
-                    <main className="parties-content">
+                    <main className="main-content">
                         <div className="parties-header-row">
                             <div className='d-flex align-items-center justify-content-between gap-2'>
                                 <h2 className="parties-page-title">{getPartyTypeLabelPlural()}</h2>
@@ -439,7 +457,7 @@ export default function Parties() {
                                     </div>
                                 </div>
                             </div>
-                            <button className="parties-add-btn" onClick={() => setModalOpen(true)}>
+                            <button className="btn-primary-add" onClick={() => setModalOpen(true)}>
                                 + Add {getPartyTypeLabel()}
                             </button>
                         </div>
@@ -710,8 +728,8 @@ export default function Parties() {
                                         </label>
                                         {error && <div className="parties-modal-error">{error}</div>}
                                         <div className="parties-modal-actions">
-                                            <button type="button" className="parties-modal-cancel" onClick={() => setModalOpen(false)}>Cancel</button>
-                                            <button type="submit" className="parties-modal-submit">Add</button>
+                                            <button type="button" className="btn-cancel" onClick={() => setModalOpen(false)}>Cancel</button>
+                                            <button type="submit" className="btn-submit">Add</button>
                                         </div>
                                     </form>
                                 </div>
@@ -828,8 +846,8 @@ export default function Parties() {
                                         </label>
                                         {editError && <div className="parties-modal-error">{editError}</div>}
                                         <div className="parties-modal-actions">
-                                            <button type="button" className="parties-modal-cancel" onClick={() => setEditModalOpen(false)}>Cancel</button>
-                                            <button type="submit" className="parties-modal-submit">Save</button>
+                                            <button type="button" className="btn-cancel" onClick={() => setEditModalOpen(false)}>Cancel</button>
+                                            <button type="submit" className="btn-submit">Save</button>
                                         </div>
                                     </form>
                                 </div>

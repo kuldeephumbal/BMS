@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaTachometerAlt, FaCog, FaUsers, FaUserTie, FaBox, FaChartBar, FaMoneyBill, FaFileInvoice, FaChevronDown, FaChevronRight, FaUserFriends, FaUserCheck, FaShoppingCart, FaTags, FaCogs, FaWallet, FaClipboardList, FaBuilding } from 'react-icons/fa';
+import { FaTachometerAlt, FaCog, FaUsers, FaUserTie, FaBox, FaChartBar, FaMoneyBill, FaFileInvoice, FaChevronDown, FaChevronRight, FaUserFriends, FaUser, FaShoppingCart, FaTags, FaCogs, FaWallet, FaClipboardList, FaBuilding } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
@@ -7,7 +7,7 @@ const navItems = [
     { label: 'Dashboard', icon: <FaTachometerAlt />, link: '/dashboard' },
     {
         label: 'Parties', icon: <FaUserFriends />, children: [
-            { label: 'Customers', icon: <FaUserCheck />, link: '/parties/customer' },
+            { label: 'Customers', icon: <FaUser />, link: '/parties/customer' },
             { label: 'Suppliers', icon: <FaUserTie />, link: '/parties/supplier' },
         ]
     },
@@ -228,7 +228,7 @@ export default function Sidebar({ open }) {
                                     )}
                                 </div>
                                 {openMenus[item.label] && (
-                                    <div className="sidebar-dropdown-children">
+                                    <div className={`sidebar-dropdown-children ${!open ? 'collapsed' : ''}`} >
                                         {item.children.map((sub) => (
                                             <Link
                                                 key={sub.label}
@@ -237,7 +237,7 @@ export default function Sidebar({ open }) {
                                                 title={!open ? sub.label : undefined}
                                             >
                                                 <span className="sidebar-dropdown-child-icon">{sub.icon}</span>
-                                                <span>{sub.label}</span>
+                                                {open && <span>{sub.label}</span>}
                                             </Link>
                                         ))}
                                     </div>

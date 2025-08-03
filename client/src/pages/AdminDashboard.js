@@ -73,16 +73,34 @@ const doughnutOptions = {
 };
 
 export default function AdminDashboard() {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+        const saved = localStorage.getItem('sidebarOpen');
+        return saved !== null ? JSON.parse(saved) : true;
+    });
     const navigate = useNavigate();
-    const handleToggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+    const handleToggleSidebar = () => {
+        const newState = !sidebarOpen;
+        setSidebarOpen(newState);
+        localStorage.setItem('sidebarOpen', JSON.stringify(newState));
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('sidebarToggle', { detail: { isOpen: newState } }));
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
             navigate('/admin-login');
         }
-    }, []);
+
+        // Listen for sidebar toggle events from other components
+        const handleSidebarToggle = (event) => {
+            setSidebarOpen(event.detail.isOpen);
+        };
+
+        window.addEventListener('sidebarToggle', handleSidebarToggle);
+        return () => window.removeEventListener('sidebarToggle', handleSidebarToggle);
+    }, [navigate]);
 
     return (
         <div className="main-layout-root">

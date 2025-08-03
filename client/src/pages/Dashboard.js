@@ -18,10 +18,10 @@ import { useNavigate } from 'react-router-dom';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const stats = [
-    { label: 'Users', value: 1240, icon: <FaUsers size={28} />, color: '#4f8cff' },
-    { label: 'Revenue', value: '$32,400', icon: <FaDollarSign size={28} />, color: '#34c77b' },
-    { label: 'Visits', value: 8920, icon: <FaEye size={28} />, color: '#f7b731' },
-    { label: 'Growth', value: '12.4%', icon: <FaChartLine size={28} />, color: '#e94f4f' },
+    { label: 'Users', value: 1240, icon: <FaUsers size={28} />, bgcolor: '#DCE8FF', color: '#4f8cff' },
+    { label: 'Revenue', value: '$32,400', icon: <FaDollarSign size={28} />, bgcolor: '#D0F4E1', color: '#34c77b' },
+    { label: 'Visits', value: 8920, icon: <FaEye size={28} />, bgcolor: '#FDF1D5', color: '#f7b731' },
+    { label: 'Growth', value: '12.4%', icon: <FaChartLine size={28} />, bgcolor: '#FAD9D9', color: '#e94f4f' },
 ];
 
 const barData = {
@@ -30,11 +30,15 @@ const barData = {
         {
             label: 'Sales',
             data: [1200, 1900, 800, 1600, 2200, 2000],
-            backgroundColor: 'rgba(79, 140, 255, 0.7)',
-            borderRadius: 8,
-            maxBarThickness: 32,
+            backgroundColor: '#667eea',
+            borderRadius: 5,
+            maxBarThickness: 26,
         },
     ],
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+    },
 };
 
 const barOptions = {
@@ -74,16 +78,34 @@ const doughnutOptions = {
 };
 
 export default function Dashboard() {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+        const saved = localStorage.getItem('sidebarOpen');
+        return saved !== null ? JSON.parse(saved) : true;
+    });
     const navigate = useNavigate();
-    const handleToggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+    const handleToggleSidebar = () => {
+        const newState = !sidebarOpen;
+        setSidebarOpen(newState);
+        localStorage.setItem('sidebarOpen', JSON.stringify(newState));
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('sidebarToggle', { detail: { isOpen: newState } }));
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
             navigate('/');
         }
-    }, []);
+
+        // Listen for sidebar toggle events from other components
+        const handleSidebarToggle = (event) => {
+            setSidebarOpen(event.detail.isOpen);
+        };
+
+        window.addEventListener('sidebarToggle', handleSidebarToggle);
+        return () => window.removeEventListener('sidebarToggle', handleSidebarToggle);
+    }, [navigate]);
 
     return (
         <div className="main-layout-root">
@@ -101,7 +123,7 @@ export default function Dashboard() {
                             {stats.map((stat) => (
                                 <div className="col-12 col-sm-6 col-lg-3" key={stat.label}>
                                     <div className="main-stat-card">
-                                        <div className="main-stat-icon" style={{ background: stat.color }}>
+                                        <div className="main-stat-icon" style={{ background: stat.bgcolor, color: stat.color }}>
                                             {stat.icon}
                                         </div>
                                         <div>

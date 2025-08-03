@@ -8,7 +8,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Profile() {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+        const saved = localStorage.getItem('sidebarOpen');
+        return saved !== null ? JSON.parse(saved) : true;
+    });
     const [isEditing, setIsEditing] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -25,7 +28,13 @@ export default function Profile() {
         confirmPassword: ''
     });
 
-    const handleToggleSidebar = () => setSidebarOpen(!sidebarOpen);
+    const handleToggleSidebar = () => {
+        const newState = !sidebarOpen;
+        setSidebarOpen(newState);
+        localStorage.setItem('sidebarOpen', JSON.stringify(newState));
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('sidebarToggle', { detail: { isOpen: newState } }));
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -36,6 +45,14 @@ export default function Profile() {
 
         // Fetch user profile data
         fetchUserProfile();
+
+        // Listen for sidebar toggle events from other components
+        const handleSidebarToggle = (event) => {
+            setSidebarOpen(event.detail.isOpen);
+        };
+
+        window.addEventListener('sidebarToggle', handleSidebarToggle);
+        return () => window.removeEventListener('sidebarToggle', handleSidebarToggle);
     }, [navigate]);
 
     const fetchUserProfile = async () => {
@@ -201,175 +218,168 @@ export default function Profile() {
                     <Header onToggleSidebar={handleToggleSidebar} />
                     <main className="main-content">
                         {/* Profile Content */}
-                        <div className="profile-content">
-                            <div className="profile-card">
-                                <div className="profile-avatar-section">
-                                    <div className="d-flex align-items-center justify-content-between gap-3">
-                                        <div className="profile-avatar">
-                                            <FaUser size={35} />
-                                        </div>
-                                        <div>
-                                            <h1 className='profile-title'>Profile</h1>
-                                            <p className='profile-subtitle'>Manage your account information</p>
-                                        </div>
-                                    </div>
-                                    <div className="profile-actions">
-                                        {!isEditing ? (
-                                            <button className="profile-edit-btn" onClick={handleEdit}>
-                                                <FaEdit /> Edit Profile
-                                            </button>
-                                        ) : (
-                                            <div className="profile-edit-actions">
-                                                <button className="profile-save-btn" onClick={handleSave}>
-                                                    <FaSave /> Save
-                                                </button>
-                                                <button className="profile-cancel-btn" onClick={handleCancel}>
-                                                    <FaTimes /> Cancel
-                                                </button>
+                        <div className="container-fluid">
+                            <div className="row justify-content-center">
+                                <div className="col-lg-8 col-md-10 col-12">
+                                    <div className="profile-card">
+                                        <div className="profile-avatar-section">
+                                            <div className="d-flex align-items-center justify-content-between gap-3">
+                                                <div className="profile-avatar">
+                                                    <FaUser size={35} />
+                                                </div>
+                                                <div>
+                                                    <h1 className='profile-title'>Profile</h1>
+                                                    <p className='profile-subtitle'>Manage your account information</p>
+                                                </div>
                                             </div>
-                                        )}
-                                    </div>
-                                </div>
+                                            <div className="profile-actions">
+                                                {!isEditing ? (
+                                                    <button className="btn-edit" onClick={handleEdit}>
+                                                        <FaEdit /> Edit Profile
+                                                    </button>
+                                                ) : (
+                                                    <div className="profile-edit-actions">
+                                                        <button className="btn-save" onClick={handleSave}>
+                                                            <FaSave /> Save
+                                                        </button>
+                                                        <button className="btn-cancel" onClick={handleCancel}>
+                                                            <FaTimes /> Cancel
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
 
-                                <div className="profile-details">
-                                    <div className="profile-detail-row">
-                                        <div className="profile-detail-group">
-                                            <label className="profile-detail-label">First Name</label>
-                                            {isEditing ? (
-                                                <input
-                                                    type="text"
-                                                    name="first_name"
-                                                    value={formData.first_name}
-                                                    onChange={handleInputChange}
-                                                    className="profile-input"
-                                                    placeholder="Enter your first name"
-                                                />
-                                            ) : (
-                                                <div className="profile-detail-value">
-                                                    <FaUser className="profile-detail-icon" />
-                                                    {user?.first_name || 'Not provided'}
+                                        <div className="profile-details">
+                                            <div className="row mb-3">
+                                                <div className="col-md-6">
+                                                    <label className="profile-detail-label">First Name</label>
+                                                    {isEditing ? (
+                                                        <input
+                                                            type="text"
+                                                            name="first_name"
+                                                            value={formData.first_name}
+                                                            onChange={handleInputChange}
+                                                            className="profile-input"
+                                                            placeholder="Enter your first name"
+                                                        />
+                                                    ) : (
+                                                        <div className="profile-detail-value">
+                                                            <FaUser className="profile-detail-icon" />
+                                                            {user?.first_name || 'Not provided'}
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <label className="profile-detail-label">Last Name</label>
+                                                    {isEditing ? (
+                                                        <input
+                                                            type="text"
+                                                            name="last_name"
+                                                            value={formData.last_name}
+                                                            onChange={handleInputChange}
+                                                            className="profile-input"
+                                                            placeholder="Enter your last name"
+                                                        />
+                                                    ) : (
+                                                        <div className="profile-detail-value">
+                                                            <FaUser className="profile-detail-icon" />
+                                                            {user?.last_name || 'Not provided'}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="row mb-3">
+                                                <div className="col-md-6">
+                                                    <label className="profile-detail-label">Email Address</label>
+                                                    {isEditing ? (
+                                                        <input
+                                                            type="email"
+                                                            name="email"
+                                                            value={formData.email}
+                                                            onChange={handleInputChange}
+                                                            className="profile-input"
+                                                            placeholder="Enter your email"
+                                                        />
+                                                    ) : (
+                                                        <div className="profile-detail-value">
+                                                            <FaEnvelope className="profile-detail-icon" />
+                                                            {user?.email || 'Not provided'}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="profile-detail-label">Phone Number</label>
+                                                    {isEditing ? (
+                                                        <input
+                                                            type="tel"
+                                                            name="phone"
+                                                            value={formData.phone}
+                                                            onChange={handleInputChange}
+                                                            className="profile-input"
+                                                            placeholder="Enter your phone number"
+                                                        />
+                                                    ) : (
+                                                        <div className="profile-detail-value">
+                                                            <FaPhone className="profile-detail-icon" />
+                                                            {user?.phone || 'Not provided'}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="row mb-3">
+                                                <div className="col-md-6">
+                                                    <label className="profile-detail-label">Member Since</label>
+                                                    <div className="profile-detail-value">
+                                                        <FaCalendar className="profile-detail-icon" />
+                                                        {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Not available'}
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <label className="profile-detail-label">Last Updated</label>
+                                                    <div className="profile-detail-value">
+                                                        <FaCalendar className="profile-detail-icon" />
+                                                        {user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'Not available'}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {isEditing && (
+                                                <div className="profile-password-section">
+                                                    <h3 className="profile-section-title">Change Password</h3>
+                                                    <div className="row">
+                                                        <div className="col-md-6">
+                                                            <label className="profile-detail-label">New Password</label>
+                                                            <input
+                                                                type="password"
+                                                                name="password"
+                                                                value={formData.password}
+                                                                onChange={handleInputChange}
+                                                                className="profile-input"
+                                                                placeholder="Enter new password (optional)"
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-md-6">
+                                                            <label className="profile-detail-label">Confirm Password</label>
+                                                            <input
+                                                                type="password"
+                                                                name="confirmPassword"
+                                                                value={formData.confirmPassword}
+                                                                onChange={handleInputChange}
+                                                                className="profile-input"
+                                                                placeholder="Confirm new password"
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
-
-                                        <div className="profile-detail-group">
-                                            <label className="profile-detail-label">Last Name</label>
-                                            {isEditing ? (
-                                                <input
-                                                    type="text"
-                                                    name="last_name"
-                                                    value={formData.last_name}
-                                                    onChange={handleInputChange}
-                                                    className="profile-input"
-                                                    placeholder="Enter your last name"
-                                                />
-                                            ) : (
-                                                <div className="profile-detail-value">
-                                                    <FaUser className="profile-detail-icon" />
-                                                    {user?.last_name || 'Not provided'}
-                                                </div>
-                                            )}
-                                        </div>
                                     </div>
-
-                                    <div className="profile-detail-row">
-                                        <div className="profile-detail-group">
-                                            <label className="profile-detail-label">Email Address</label>
-                                            {isEditing ? (
-                                                <input
-                                                    type="email"
-                                                    name="email"
-                                                    value={formData.email}
-                                                    onChange={handleInputChange}
-                                                    className="profile-input"
-                                                    placeholder="Enter your email"
-                                                />
-                                            ) : (
-                                                <div className="profile-detail-value">
-                                                    <FaEnvelope className="profile-detail-icon" />
-                                                    {user?.email || 'Not provided'}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="profile-detail-row">
-                                        <div className="profile-detail-group">
-                                            <label className="profile-detail-label">Phone Number</label>
-                                            {isEditing ? (
-                                                <input
-                                                    type="tel"
-                                                    name="phone"
-                                                    value={formData.phone}
-                                                    onChange={handleInputChange}
-                                                    className="profile-input"
-                                                    placeholder="Enter your phone number"
-                                                />
-                                            ) : (
-                                                <div className="profile-detail-value">
-                                                    <FaPhone className="profile-detail-icon" />
-                                                    {user?.phone || 'Not provided'}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="profile-detail-group">
-                                            <label className="profile-detail-label">Role</label>
-                                            <div className="profile-detail-value">
-                                                <FaUser className="profile-detail-icon" />
-                                                {user?.role || 'User'}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="profile-detail-row">
-                                        <div className="profile-detail-group">
-                                            <label className="profile-detail-label">Member Since</label>
-                                            <div className="profile-detail-value">
-                                                <FaCalendar className="profile-detail-icon" />
-                                                {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Not available'}
-                                            </div>
-                                        </div>
-
-                                        <div className="profile-detail-group">
-                                            <label className="profile-detail-label">Last Updated</label>
-                                            <div className="profile-detail-value">
-                                                <FaCalendar className="profile-detail-icon" />
-                                                {user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'Not available'}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {isEditing && (
-                                        <div className="profile-password-section">
-                                            <h3 className="profile-section-title">Change Password</h3>
-                                            <div className="profile-detail-row">
-                                                <div className="profile-detail-group">
-                                                    <label className="profile-detail-label">New Password</label>
-                                                    <input
-                                                        type="password"
-                                                        name="password"
-                                                        value={formData.password}
-                                                        onChange={handleInputChange}
-                                                        className="profile-input"
-                                                        placeholder="Enter new password (optional)"
-                                                    />
-                                                </div>
-
-                                                <div className="profile-detail-group">
-                                                    <label className="profile-detail-label">Confirm Password</label>
-                                                    <input
-                                                        type="password"
-                                                        name="confirmPassword"
-                                                        value={formData.confirmPassword}
-                                                        onChange={handleInputChange}
-                                                        className="profile-input"
-                                                        placeholder="Confirm new password"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         </div>

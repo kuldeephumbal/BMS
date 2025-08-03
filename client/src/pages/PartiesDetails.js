@@ -15,13 +15,20 @@ import {
     FaPlus,
     FaArrowLeft,
     FaMoneyBillWave,
+    FaArrowUp,
+    FaArrowDown,
+    FaBalanceScale,
+    FaListAlt,
 } from 'react-icons/fa';
 
 export default function PartiesDetails() {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+        const saved = localStorage.getItem('sidebarOpen');
+        return saved !== null ? JSON.parse(saved) : true;
+    });
     const [party, setParty] = useState(null);
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -81,8 +88,17 @@ export default function PartiesDetails() {
             setActiveBusinessId(updatedActiveBusinessId);
         };
 
+        // Listen for sidebar toggle events from other components
+        const handleSidebarToggle = (event) => {
+            setSidebarOpen(event.detail.isOpen);
+        };
+
         window.addEventListener('activeBusinessChanged', handleActiveBusinessChange);
-        return () => window.removeEventListener('activeBusinessChanged', handleActiveBusinessChange);
+        window.addEventListener('sidebarToggle', handleSidebarToggle);
+        return () => {
+            window.removeEventListener('activeBusinessChanged', handleActiveBusinessChange);
+            window.removeEventListener('sidebarToggle', handleSidebarToggle);
+        };
     }, []);
 
     useEffect(() => {
@@ -183,7 +199,13 @@ export default function PartiesDetails() {
         }
     };
 
-    const handleToggleSidebar = () => setSidebarOpen(!sidebarOpen);
+    const handleToggleSidebar = () => {
+        const newState = !sidebarOpen;
+        setSidebarOpen(newState);
+        localStorage.setItem('sidebarOpen', JSON.stringify(newState));
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('sidebarToggle', { detail: { isOpen: newState } }));
+    };
 
     const handleTransactionChange = (e) => {
         const { name, value } = e.target;
@@ -361,12 +383,12 @@ export default function PartiesDetails() {
 
     if (loading && !party) {
         return (
-            <div className="parties-details-layout-root">
-                <div className="parties-details-layout-row">
+            <div className="main-layout-root">
+                <div className="main-layout-row">
                     <Sidebar open={sidebarOpen} />
-                    <div className="parties-details-content-container">
+                    <div className="main-content-container">
                         <Header onToggleSidebar={handleToggleSidebar} />
-                        <main className="parties-details-content">
+                        <main className="main-content">
                             <div style={{ textAlign: 'center', padding: '40px' }}>
                                 <div>Loading party details...</div>
                             </div>
@@ -379,12 +401,12 @@ export default function PartiesDetails() {
 
     if (!party) {
         return (
-            <div className="parties-details-layout-root">
-                <div className="parties-details-layout-row">
+            <div className="main-layout-root">
+                <div className="main-layout-row">
                     <Sidebar open={sidebarOpen} />
-                    <div className="parties-details-content-container">
+                    <div className="main-content-container">
                         <Header onToggleSidebar={handleToggleSidebar} />
-                        <main className="parties-details-content">
+                        <main className="main-content">
                             <div style={{ textAlign: 'center', padding: '40px' }}>
                                 <div style={{ fontSize: '1.2rem', color: '#7b7b93', marginBottom: '10px' }}>
                                     Party Not Found
@@ -401,17 +423,17 @@ export default function PartiesDetails() {
     }
 
     return (
-        <div className="parties-details-layout-root">
-            <div className="parties-details-layout-row">
+        <div className="main-layout-root">
+            <div className="main-layout-row">
                 <Sidebar open={sidebarOpen} />
-                <div className="parties-details-content-container">
+                <div className="main-content-container">
                     <Header onToggleSidebar={handleToggleSidebar} />
-                    <main className="parties-details-content">
+                    <main className="main-content">
                         {/* Header Section */}
                         <div className="parties-details-header">
                             <div className="parties-details-header-left">
                                 <button
-                                    className="parties-details-back-btn"
+                                    className="btn-secondary-back"
                                     onClick={() => navigate(-1)}
                                 >
                                     <FaArrowLeft />
@@ -425,7 +447,7 @@ export default function PartiesDetails() {
                                 </div>
                             </div>
                             <button
-                                className="parties-details-add-transaction-btn"
+                                className="btn-primary-add"
                                 onClick={() => setTransactionModalOpen(true)}
                             >
                                 <FaPlus />
@@ -436,6 +458,9 @@ export default function PartiesDetails() {
                         {/* Transaction Statistics */}
                         <div className="parties-details-stats-grid">
                             <div className="parties-details-stat-card">
+                                <div className="parties-details-stat-icon" style={{ background: '#FDF1D5', color: '#f7b731' }}>
+                                    <FaArrowUp size={28} />
+                                </div>
                                 <div className="parties-details-stat-content">
                                     <h3>Total Given</h3>
                                     <p className="parties-details-stat-amount">{formatCurrency(stats.gaveAmount)}</p>
@@ -443,6 +468,9 @@ export default function PartiesDetails() {
                             </div>
 
                             <div className="parties-details-stat-card">
+                                <div className="parties-details-stat-icon" style={{ background: '#D0F4E1', color: '#34c77b' }}>
+                                    <FaArrowDown size={28} />
+                                </div>
                                 <div className="parties-details-stat-content">
                                     <h3>Total Received</h3>
                                     <p className="parties-details-stat-amount">{formatCurrency(stats.gotAmount)}</p>
@@ -450,6 +478,9 @@ export default function PartiesDetails() {
                             </div>
 
                             <div className="parties-details-stat-card">
+                                <div className="parties-details-stat-icon" style={{ background: '#DCE8FF', color: '#4f8cff' }}>
+                                    <FaBalanceScale size={28} />
+                                </div>
                                 <div className="parties-details-stat-content">
                                     <h3>Net Balance</h3>
                                     <p className={`parties-details-stat-amount ${stats.netAmount >= 0 ? 'positive' : 'negative'}`}>
@@ -459,6 +490,9 @@ export default function PartiesDetails() {
                             </div>
 
                             <div className="parties-details-stat-card">
+                                <div className="parties-details-stat-icon" style={{ background: '#FAD9D9', color: '#e94f4f' }}>
+                                    <FaListAlt size={28} />
+                                </div>
                                 <div className="parties-details-stat-content">
                                     <h3>Transactions</h3>
                                     <p className="parties-details-stat-amount">{stats.totalTransactions}</p>
@@ -487,13 +521,6 @@ export default function PartiesDetails() {
                                         <FaMoneyBillWave size={48} color="#7b7b93" />
                                         <h3>No transactions yet</h3>
                                         <p>Start by adding your first transaction with this {party.type}.</p>
-                                        <button
-                                            className="parties-details-empty-state-btn"
-                                            onClick={() => setTransactionModalOpen(true)}
-                                        >
-                                            <FaPlus />
-                                            Add First Transaction
-                                        </button>
                                     </div>
                                 ) : (
                                     <div className="parties-details-transactions-table">
@@ -658,12 +685,12 @@ export default function PartiesDetails() {
                                         <div className="parties-modal-actions">
                                             <button
                                                 type="button"
-                                                className="parties-modal-cancel"
+                                                className="btn-cancel"
                                                 onClick={() => setTransactionModalOpen(false)}
                                             >
                                                 Cancel
                                             </button>
-                                            <button type="submit" className="parties-modal-submit">
+                                            <button type="submit" className="btn-submit">
                                                 Add Transaction
                                             </button>
                                         </div>
@@ -747,12 +774,12 @@ export default function PartiesDetails() {
                                         <div className="parties-modal-actions">
                                             <button
                                                 type="button"
-                                                className="parties-modal-cancel"
+                                                className="btn-cancel"
                                                 onClick={() => setEditTransactionModalOpen(false)}
                                             >
                                                 Cancel
                                             </button>
-                                            <button type="submit" className="parties-modal-submit">
+                                            <button type="submit" className="btn-submit">
                                                 Update Transaction
                                             </button>
                                         </div>
