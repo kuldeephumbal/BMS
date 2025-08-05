@@ -1458,9 +1458,11 @@ input:focus {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    padding: 16px 28px 24px 28px;
+    padding: 20px 28px;
     border-top: 1px solid #f0f2f5;
     background: #f8fafc;
+    margin-top: auto;
+    flex-shrink: 0;
 }
 
 /* Icon Button - Small action buttons */
@@ -1527,7 +1529,7 @@ input:focus {
     .main-data-modal-actions {
         flex-direction: column-reverse;
         gap: 8px;
-        padding: 12px 20px 20px 20px;
+        padding: 16px 20px;
     }
 
     .main-data-table th,
@@ -1551,11 +1553,7 @@ input:focus {
     }
 
     .main-data-modal-actions {
-        padding: 8px 16px 16px 16px;
-    }
-
-    .main-data-modal-actions {
-        padding: 0 20px 20px;
+        padding: 16px;
     }
 }
 
@@ -2593,7 +2591,7 @@ input:focus {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    padding: 16px 28px 24px 28px;
+    padding: 20px 28px;
     border-top: 1px solid #f0f2f5;
     background: #f8fafc;
 }

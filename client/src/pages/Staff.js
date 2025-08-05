@@ -8,7 +8,7 @@ import Sidebar from '../components/Sidebar';
 import ConfirmModal from '../components/ConfirmModal';
 import { FaEdit, FaTrash, FaPlus, FaPhone, FaEnvelope, FaSearch, FaEye, FaEyeSlash, FaToggleOn, FaToggleOff, FaUserCheck, FaUserTimes, FaTimes } from 'react-icons/fa';
 
-export default function StaffManagement() {
+export default function Staff() {
     const navigate = useNavigate();
 
     const [sidebarOpen, setSidebarOpen] = useState(() => {
@@ -282,8 +282,7 @@ export default function StaffManagement() {
         setConfirmModalData({
             title: 'Delete Staff Member',
             message: `Are you sure you want to delete ${staffMember.first_name} ${staffMember.last_name}? This action cannot be undone.`,
-            onConfirm: () => handleDeleteStaff(staffMember._id),
-            onCancel: () => setShowConfirmModal(false)
+            onConfirm: () => handleDeleteStaff(staffMember._id)
         });
         setShowConfirmModal(true);
     };
@@ -775,7 +774,6 @@ export default function StaffManagement() {
                                             />
                                             Active Status
                                         </label>
-
                                         <div className="main-data-modal-actions">
                                             <button
                                                 type="button"
@@ -799,7 +797,7 @@ export default function StaffManagement() {
                             title={confirmModalData.title}
                             message={confirmModalData.message}
                             onConfirm={confirmModalData.onConfirm}
-                            onCancel={confirmModalData.onCancel}
+                            onClose={() => setShowConfirmModal(false)}
                         />
 
                         <ToastContainer

@@ -13,7 +13,7 @@ import Profile from './pages/Profile';
 import Business from './pages/Business';
 import Parties from './pages/Parties';
 import PartiesDetails from './pages/PartiesDetails';
-import StaffManagement from './pages/StaffManagement';
+import Staff from './pages/Staff';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -29,7 +29,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/parties/:id/details" element={<PartiesDetails />} />
         <Route path="/customers" element={<Parties />} />
         <Route path="/suppliers" element={<Parties />} />
-        <Route path="/staff-management" element={<StaffManagement />} />
+        <Route path="/staff-management" element={<Staff />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

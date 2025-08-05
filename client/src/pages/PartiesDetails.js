@@ -133,6 +133,12 @@ export default function PartiesDetails() {
             });
             if (response.status === 200) {
                 setParty(response.data.party);
+                // Store the party type in localStorage for sidebar active state
+                if (response.data.party && response.data.party.type) {
+                    localStorage.setItem('lastPartiesType', response.data.party.type);
+                    // Dispatch custom event to notify other components
+                    window.dispatchEvent(new CustomEvent('lastPartiesTypeChanged'));
+                }
             }
         } catch (error) {
             console.error('Error fetching party details:', error);
@@ -720,7 +726,7 @@ export default function PartiesDetails() {
                                             className="main-data-modal-close"
                                             onClick={() => setEditTransactionModalOpen(false)}
                                         >
-                                            <FaTimes />
+                                            <FaTimes />3
                                         </button>
                                     </div>
                                     <form onSubmit={handleEditTransaction} className="main-data-modal-form">

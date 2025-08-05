@@ -143,6 +143,13 @@ export default function Parties() {
         return () => clearTimeout(timeoutId);
     }, [search, activeBusinessId, partyType]);
 
+    // Store the party type in localStorage for sidebar active state
+    useEffect(() => {
+        localStorage.setItem('lastPartiesType', partyType);
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('lastPartiesTypeChanged'));
+    }, [partyType]);
+
     const fetchParties = async () => {
         if (!activeBusinessId) return;
 

@@ -35,6 +35,7 @@ const navItems = [
 export default function Sidebar({ open }) {
     const [openMenus, setOpenMenus] = useState({});
     const [activeBusiness, setActiveBusiness] = useState(null);
+    const [lastPartiesType, setLastPartiesType] = useState(localStorage.getItem('lastPartiesType') || 'customer');
     const location = useLocation();
 
     const handleToggle = (label) => {
@@ -46,7 +47,37 @@ export default function Sidebar({ open }) {
     // Function to check if a nav item is active
     const isActiveLink = (link) => {
         if (!link) return false;
-        return location.pathname === link || location.pathname.startsWith(link + '/');
+
+        // Handle exact matches
+        if (location.pathname === link) return true;
+
+        // Handle parties routes specifically
+        if (link === '/parties/customer') {
+            // Check for customer routes
+            if (location.pathname === '/parties/customer' || location.pathname === '/customers') {
+                return true;
+            }
+            // For details pages, check if we came from customers section
+            if (location.pathname.includes('/details')) {
+                return lastPartiesType === 'customer';
+            }
+            return false;
+        }
+
+        if (link === '/parties/supplier') {
+            // Check for supplier routes  
+            if (location.pathname === '/parties/supplier' || location.pathname === '/suppliers') {
+                return true;
+            }
+            // For details pages, check if we came from suppliers section
+            if (location.pathname.includes('/details')) {
+                return lastPartiesType === 'supplier';
+            }
+            return false;
+        }
+
+        // Default behavior for other routes
+        return location.pathname.startsWith(link + '/');
     };
 
     // Function to check if any child of a dropdown is active
@@ -75,6 +106,25 @@ export default function Sidebar({ open }) {
             }
         }
     }, [location.pathname, open]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Listen for changes in lastPartiesType in localStorage
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const newType = localStorage.getItem('lastPartiesType') || 'customer';
+            setLastPartiesType(newType);
+        };
+
+        // Listen for storage events (from other tabs)
+        window.addEventListener('storage', handleStorageChange);
+
+        // Also listen for custom events within the same tab
+        window.addEventListener('lastPartiesTypeChanged', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('lastPartiesTypeChanged', handleStorageChange);
+        };
+    }, []);
 
     // Close dropdowns when sidebar is toggled from open to closed
     useEffect(() => {
