@@ -12,7 +12,7 @@ const navItems = [
         ]
     },
     { label: 'Staff Managements', icon: <FaUsers />, link: '/staff-management' },
-    { label: 'Expanses & Budgets', icon: <FaWallet /> },
+    { label: 'Expenses & Budgets', icon: <FaWallet />, link: '/expence-budget' },
     {
         label: 'Products', icon: <FaBox />, children: [
             { label: 'Sales', icon: <FaTags /> },
