@@ -1929,10 +1929,6 @@ input:focus {
 }
 
 @media (max-width: 992px) {
-    .modern-table-container {
-        overflow-x: auto;
-    }
-
     .modern-parties-table {
         min-width: 800px;
     }
@@ -3278,3 +3274,19 @@ input:focus {
 }
 
 /* ================= End Expense & Budget Toggle Buttons ================= */
+
+.main-data-table.product-table th,
+.main-data-table.product-table td {
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.main-data-table.product-table td:first-child,
+.main-data-table.product-table th:first-child {
+    padding-left: 20px;
+}
+
+.main-data-table.product-table td:last-child,
+.main-data-table.product-table th:last-child {
+    padding-right: 20px;
+}

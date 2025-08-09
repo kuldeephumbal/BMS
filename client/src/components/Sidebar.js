@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaTachometerAlt, FaCog, FaUsers, FaUserTie, FaBox, FaChartBar, FaMoneyBill, FaFileInvoice, FaChevronDown, FaChevronRight, FaUserFriends, FaUser, FaShoppingCart, FaTags, FaCogs, FaWallet, FaClipboardList, FaBuilding } from 'react-icons/fa';
+import { FaTachometerAlt, FaCog, FaUsers, FaUserTie, FaBox, FaChartBar, FaMoneyBill, FaFileInvoice, FaChevronDown, FaChevronRight, FaUserFriends, FaUser, FaShoppingCart, FaTags, FaCogs, FaWallet, FaClipboardList, FaBuilding, FaBoxOpen } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
@@ -14,12 +14,11 @@ const navItems = [
     { label: 'Staff Managements', icon: <FaUsers />, link: '/staff-management' },
     { label: 'Expenses & Budgets', icon: <FaWallet />, link: '/expence-budget' },
     {
-        label: 'Products', icon: <FaBox />, children: [
-            { label: 'Sales', icon: <FaTags /> },
-            { label: 'Buys', icon: <FaShoppingCart /> },
+        label: 'Items', icon: <FaBox />, children: [
+            { label: 'Products', icon: <FaBoxOpen />, link: '/products' },
+            { label: 'Services', icon: <FaCogs /> },
         ]
     },
-    { label: 'Services', icon: <FaCogs /> },
     { label: 'Transaction Details', icon: <FaClipboardList /> },
     {
         label: 'Billings', icon: <FaFileInvoice />, children: [

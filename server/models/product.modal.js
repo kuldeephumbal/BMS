@@ -1,19 +1,69 @@
 const mongoose = require("mongoose");
 
-const products = new mongoose.Schema({
-    name: { type: String, required: true },
-    image: { type: String, required: true },
-    primaryUnit: { type: String, required: true },
-    secondaryUnit: { type: String, required: true },
-    salePrice: { type: Number, required: true },
-    purchasePrice: { type: Number, required: true },
-    taxIncluded: { type: Boolean, default: false },
-    openingStock: { type: Number, default: 0 },
-    lowStockAlert: { type: Number, default: 0 },
-    date: { type: Date, default: Date.now },
-    HSN: { type: String, required: true },
-    GST: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
+const productSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    businessId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Business",
+        required: true
+    },
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    image: {
+        type: String, // optional now
+    },
+    primaryUnit: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    secondaryUnit: {
+        type: String,
+        default: ""
+    },
+    salePrice: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    purchasePrice: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    taxIncluded: {
+        type: Boolean,
+        default: false
+    },
+    openingStock: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    lowStockAlert: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    HSN: {
+        type: String,
+        trim: true
+    },
+    GST: {
+        type: String,
+        trim: true
+    },
+    note: {
+        type: String,
+        default: ""
+    }
 }, { timestamps: true });
 
-module.exports = mongoose.model("Product", products);
+module.exports = mongoose.model("Product", productSchema);
