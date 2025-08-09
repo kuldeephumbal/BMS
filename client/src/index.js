@@ -17,6 +17,7 @@ import Staffs from './pages/Staffs';
 import ExpenseBudget from './pages/ExpenseBudget';
 import Product from './pages/Product';
 import ProductDetail from './pages/ProductDetail';
+import Service from './pages/Service';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -36,6 +37,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/expence-budget" element={<ExpenseBudget />} />
         <Route path="/products" element={<Product />} />
         <Route path="/products/:id/details" element={<ProductDetail />} />
+        <Route path="/services" element={<Service />} />
         <Route path="*" element={<div>Page Not Found</div>} />
       </Routes>
     </BrowserRouter>

@@ -16,10 +16,10 @@ const navItems = [
     {
         label: 'Items', icon: <FaBox />, children: [
             { label: 'Products', icon: <FaBoxOpen />, link: '/products' },
-            { label: 'Services', icon: <FaCogs /> },
+            { label: 'Services', icon: <FaCogs />, link: '/services' },
         ]
     },
-    { label: 'Transaction Details', icon: <FaClipboardList /> },
+    { label: 'Cashbook', icon: <FaClipboardList /> },
     {
         label: 'Billings', icon: <FaFileInvoice />, children: [
             { label: 'Sales', icon: <FaTags /> },
