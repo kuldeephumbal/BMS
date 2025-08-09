@@ -11,6 +11,9 @@ const businessRoutes = require('./routes/business.route');
 const partiesRoutes = require('./routes/parties.route');
 const transactionRoutes = require('./routes/transaction.route');
 const staffRoutes = require('./routes/staff.route');
+const categoryRoutes = require('./routes/category.route');
+const expenseRoutes = require('./routes/expense.route');
+const budgetRoutes = require('./routes/budget.route');
 
 // Middleware
 swaggerDocs(app);
@@ -38,6 +41,9 @@ app.use('/api', businessRoutes);
 app.use('/api', partiesRoutes);
 app.use('/api', transactionRoutes);
 app.use('/api', staffRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', expenseRoutes);
+app.use('/api', budgetRoutes);
 
 // Start the server
 const PORT = 5000;
