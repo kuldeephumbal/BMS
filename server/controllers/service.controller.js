@@ -3,17 +3,24 @@ const Service = require('../models/service.modal');
 // Create Service
 module.exports.createService = async (req, res) => {
     try {
-        const { userId, businessId, name, image, price, unit, includeTax, SACCode, GST } = req.body;
-        if (!userId || !businessId || !name || !image || !price || !unit || !SACCode || !GST) {
-            return res.status(400).json({ message: 'All fields are required.' });
+        const { userId, businessId, name, price, unit, includeTax, SACCode, GST } = req.body;
+        if (!userId || !businessId || !name || !price || !unit || !SACCode || !GST) {
+            return res.status(400).json({ message: 'All required fields must be provided.' });
         }
+
+        // Handle image upload
+        let imageName = null;
+        if (req.file) {
+            imageName = req.file.filename;
+        }
+
         const newService = new Service({
             userId,
             businessId,
             name: name.trim(),
-            image,
-            price,
-            unit,
+            image: imageName,
+            price: parseFloat(price),
+            unit: unit.trim(),
             includeTax: includeTax === 'true' || includeTax === true,
             SACCode: SACCode.trim(),
             GST: GST.trim()
@@ -68,13 +75,14 @@ module.exports.getServiceById = async (req, res) => {
 module.exports.updateService = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, image, price, unit, includeTax, SACCode, GST, businessId } = req.body;
+        const { name, price, unit, includeTax, SACCode, GST, businessId } = req.body;
         const service = await Service.findById(id);
         if (!service) return res.status(404).json({ message: 'Service not found.' });
+
         if (name) service.name = name.trim();
-        if (image) service.image = image;
-        if (price) service.price = price;
-        if (unit) service.unit = unit;
+        if (req.file) service.image = req.file.filename; // Handle uploaded image
+        if (price) service.price = parseFloat(price);
+        if (unit) service.unit = unit.trim();
         if (includeTax !== undefined) service.includeTax = includeTax === 'true' || includeTax === true;
         if (SACCode) service.SACCode = SACCode.trim();
         if (GST) service.GST = GST.trim();

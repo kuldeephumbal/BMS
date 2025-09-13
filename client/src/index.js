@@ -18,6 +18,11 @@ import ExpenseBudget from './pages/ExpenseBudget';
 import Product from './pages/Product';
 import ProductDetail from './pages/ProductDetail';
 import Service from './pages/Service';
+import Cashbook from './pages/Cashbook';
+import Billing from './pages/Billing';
+import BillingDetails from './pages/BillingDetails';
+import AddEditBill from './pages/AddEditBill';
+import BillPreviewPage from './pages/BillPreviewPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -33,11 +38,17 @@ createRoot(document.getElementById('root')).render(
         <Route path="/parties/:id/details" element={<PartiesDetails />} />
         <Route path="/customers" element={<Parties />} />
         <Route path="/suppliers" element={<Parties />} />
-        <Route path="/staff-management" element={<Staffs />} />
-        <Route path="/expence-budget" element={<ExpenseBudget />} />
+        <Route path="/staffs" element={<Staffs />} />
+        <Route path="/expenses-budgets" element={<ExpenseBudget />} />
         <Route path="/products" element={<Product />} />
         <Route path="/products/:id/details" element={<ProductDetail />} />
         <Route path="/services" element={<Service />} />
+        <Route path="/cashbook" element={<Cashbook />} />
+        <Route path="/billing/:type" element={<Billing />} />
+        <Route path="/billing/:type/details/:id" element={<BillingDetails />} />
+        <Route path="/billing/:type/add" element={<AddEditBill />} />
+        <Route path="/billing/:type/edit/:id" element={<AddEditBill />} />
+        <Route path="/billing/:type/preview" element={<BillPreviewPage />} />
         <Route path="*" element={<div>Page Not Found</div>} />
       </Routes>
     </BrowserRouter>

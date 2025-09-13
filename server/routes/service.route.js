@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const upload = require('../config/multer');
 const { createService, getAllServices, getServiceById, updateService, deleteService } = require('../controllers/service.controller');
 
 /**
@@ -62,7 +63,7 @@ const { createService, getAllServices, getServiceById, updateService, deleteServ
  *       500:
  *         description: Server error
  */
-router.post('/service', auth, createService);
+router.post('/service', auth, upload.single('image'), createService);
 
 /**
  * @swagger
@@ -164,7 +165,7 @@ router.get('/service/:id', auth, getServiceById);
  *       500:
  *         description: Server error
  */
-router.put('/service/:id', auth, updateService);
+router.put('/service/:id', auth, upload.single('image'), updateService);
 
 /**
  * @swagger

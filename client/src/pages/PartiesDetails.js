@@ -534,49 +534,51 @@ export default function PartiesDetails() {
                                         <table>
                                             <thead>
                                                 <tr>
-                                                    <th>Date</th>
-                                                    <th>Type</th>
-                                                    <th>Amount</th>
-                                                    <th>Payment Method</th>
-                                                    <th>Notes</th>
-                                                    <th>Actions</th>
+                                                    <th style={{ textAlign: 'left' }}>DATE</th>
+                                                    <th style={{ textAlign: 'left' }}>TYPE</th>
+                                                    <th style={{ textAlign: 'right' }}>AMOUNT</th>
+                                                    <th style={{ textAlign: 'left' }}>PAYMENT METHOD</th>
+                                                    <th style={{ textAlign: 'left' }}>NOTES</th>
+                                                    <th style={{ textAlign: 'left' }}>ACTIONS</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {transactions.map((transaction) => (
                                                     <tr key={transaction._id}>
-                                                        <td>{formatDate(transaction.date)}</td>
-                                                        <td>
+                                                        <td style={{ textAlign: 'left' }}>{formatDate(transaction.date)}</td>
+                                                        <td style={{ textAlign: 'left' }}>
                                                             <span className={`transaction-type-badge ${transaction.type}`}>
                                                                 {transaction.type === 'gave' ? 'Given' : 'Received'}
                                                             </span>
                                                         </td>
-                                                        <td className="transaction-amount">
+                                                        <td className="transaction-amount" style={{ textAlign: 'right' }}>
                                                             {formatCurrency(transaction.amount)}
                                                         </td>
-                                                        <td>
+                                                        <td style={{ textAlign: 'left' }}>
                                                             <span className="payment-method-badge">
                                                                 {transaction.paymentMethod}
                                                             </span>
                                                         </td>
-                                                        <td className="transaction-notes">
+                                                        <td className="transaction-notes" style={{ textAlign: 'left' }}>
                                                             {transaction.notes || '-'}
                                                         </td>
                                                         <td className="transaction-actions">
-                                                            <button
-                                                                className="btn"
-                                                                onClick={() => handleOpenEditTransaction(transaction)}
-                                                                title="Edit"
-                                                            >
-                                                                <FaEdit />
-                                                            </button>
-                                                            <button
-                                                                className="btn"
-                                                                onClick={() => handleDeleteTransaction(transaction._id)}
-                                                                title="Delete"
-                                                            >
-                                                                <FaTrash />
-                                                            </button>
+                                                            <div className="action-buttons">
+                                                                <button
+                                                                    className="btn-edit"
+                                                                    onClick={() => handleOpenEditTransaction(transaction)}
+                                                                    title="Edit"
+                                                                >
+                                                                    <FaEdit />
+                                                                </button>
+                                                                <button
+                                                                    className="btn-delete-icon"
+                                                                    onClick={() => handleDeleteTransaction(transaction._id)}
+                                                                    title="Delete"
+                                                                >
+                                                                    <FaTrash />
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))}

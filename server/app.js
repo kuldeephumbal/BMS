@@ -17,13 +17,16 @@ const budgetRoutes = require('./routes/budget.route');
 const productRoutes = require('./routes/product.route');
 const stockRoutes = require('./routes/stock.route');
 const serviceRoutes = require('./routes/service.route');
+const cashbookRoutes = require('./routes/cashbook.route');
+const billingRoutes = require('./routes/billing.route');
+const billingTermsRoutes = require('./routes/billingTerms.route');
 
 // Middleware
 swaggerDocs(app);
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.json({ limit: '50mb' })); // Increased limit for image uploads
+app.use(express.urlencoded({ extended: true, limit: '50mb' })); // Increased limit for image uploads
+app.use(bodyParser.json({ limit: '50mb' })); // Increased limit for image uploads
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads', {
@@ -50,6 +53,9 @@ app.use('/api', budgetRoutes);
 app.use('/api', productRoutes);
 app.use('/api', stockRoutes);
 app.use('/api', serviceRoutes);
+app.use('/api', cashbookRoutes);
+app.use('/api', billingRoutes);
+app.use('/api', billingTermsRoutes);
 
 // Start the server
 const PORT = 5000;

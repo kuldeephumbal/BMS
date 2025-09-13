@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
@@ -12,11 +12,15 @@ import {
     FaEdit,
     FaTrash,
     FaSearch,
-    FaBoxOpen,
     FaTimes
 } from 'react-icons/fa';
 
 export default function Product() {
+    // Helper function to get image URL
+    const getImageUrl = (imageName) => {
+        return `http://localhost:5000/uploads/logos/${imageName}`;
+    };
+
     const [sidebarOpen, setSidebarOpen] = useState(() => {
         const saved = localStorage.getItem('sidebarOpen');
         return saved !== null ? JSON.parse(saved) : true;
@@ -31,15 +35,6 @@ export default function Product() {
 
     // Search
     const [search, setSearch] = useState('');
-
-    // Total inventory value (must be before any conditional return)
-    const totalInventoryValue = useMemo(() => {
-        return products.reduce((sum, p) => {
-            const qty = Number(p.openingStock) || 0;
-            const rate = Number(p.purchasePrice) || 0;
-            return sum + qty * rate;
-        }, 0);
-    }, [products]);
 
     // Modal / Form
     const [productModalOpen, setProductModalOpen] = useState(false);
@@ -122,7 +117,7 @@ export default function Product() {
             note: product.note || '',
             image: null
         });
-        setImagePreview(product.image ? `${BASE_URL}/uploads/logos/${product.image}` : null);
+        setImagePreview(product.image ? getImageUrl(product.image) : null);
         setProductError('');
         setProductModalOpen(true);
     };
@@ -309,84 +304,80 @@ export default function Product() {
                     <div className="main-content">
                         <div className="main-data-header-row">
                             <div className="d-flex align-items-center justify-content-between w-100">
-                                <h1 className="main-data-page-title d-flex align-items-center gap-2">
-                                    <FaBoxOpen /> Products Management
-                                </h1>
-                                <button className="btn-primary-add" onClick={handleOpenAdd}>
-                                    <FaPlus /> Add Product
-                                </button>
+                                <div className="d-flex align-items-center gap-3">
+                                    <h1 className="main-data-page-title d-flex align-items-center gap-2">
+                                        Products
+                                    </h1>
+                                    <div style={{ position: 'relative', maxWidth: 400 }}>
+                                        <FaSearch style={{ position: 'absolute', top: '50%', left: 16, transform: 'translateY(-50%)', color: '#888', fontSize: 16, zIndex: 1 }} />
+                                        <input
+                                            type="text"
+                                            placeholder="Search here..."
+                                            value={search}
+                                            onChange={e => setSearch(e.target.value)}
+                                            style={{ width: '100%', padding: '12px 16px 12px 40px', border: '1.5px solid #e0e0e0', borderRadius: '10px', fontSize: '1rem', outline: 'none', backgroundColor: '#fff' }}
+                                            onFocus={e => e.target.style.borderColor = '#232526'}
+                                            onBlur={e => e.target.style.borderColor = '#e0e0e0'}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="d-flex align-items-center gap-3">
+                                    <button className="btn-primary-add" onClick={handleOpenAdd}>
+                                        <FaPlus /> Add Product
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="common-card">
-                            <div className="common-card-header d-flex align-items-center justify-content-between">
-                                <div style={{ position: 'relative', maxWidth: 400 }}>
-                                    <FaSearch style={{ position: 'absolute', top: '50%', left: 16, transform: 'translateY(-50%)', color: '#888', fontSize: 16, zIndex: 1 }} />
-                                    <input
-                                        type="text"
-                                        placeholder="Search by name / HSN / GST..."
-                                        value={search}
-                                        onChange={e => setSearch(e.target.value)}
-                                        style={{ width: '100%', padding: '12px 16px 12px 40px', border: '1.5px solid #e0e0e0', borderRadius: '10px', fontSize: '1rem', outline: 'none', backgroundColor: '#fff' }}
-                                        onFocus={e => e.target.style.borderColor = '#232526'}
-                                        onBlur={e => e.target.style.borderColor = '#e0e0e0'}
-                                    />
-                                </div>
-                                <div className="text-end" style={{ minWidth: 180 }}>
-                                    <div className="small text-muted" style={{ lineHeight: 1.2 }}>Total Value</div>
-                                    <div className="fw-bold" style={{ fontSize: '0.95rem' }}>{formatCurrency(totalInventoryValue)}</div>
-                                </div>
-                            </div>
-                            <div className="main-data-table-wrapper">
-                                <table className="main-data-table product-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Image</th>
-                                            <th className="text-end">Sale Price</th>
-                                            <th className="text-end">Purchase Price</th>
-                                            <th>Stock</th>
-                                            <th>Low Alert</th>
-                                            <th>HSN</th>
-                                            <th>GST</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {productsLoading ? (
-                                            <tr><td colSpan="9" className="text-center py-4">Loading products...</td></tr>
-                                        ) : filteredProducts.length === 0 ? (
-                                            <tr><td colSpan="9" className="text-center py-4">{search ? 'No products match your search.' : 'No products found. Add your first product!'}</td></tr>
-                                        ) : (
-                                            filteredProducts.map(product => (
-                                                <tr key={product._id} className="main-data-table-row" style={{ cursor: 'pointer' }} onClick={() => navigate(`/products/${product._id}/details`)}>
-                                                    <td>
-                                                        <div className="fw-medium text-primary text-decoration-underline" onClick={(e) => { e.stopPropagation(); navigate(`/products/${product._id}/details`); }}>{product.name}</div>
-                                                        {product.note && <small className="text-muted d-block">{product.note}</small>}
-                                                    </td>
-                                                    <td>
-                                                        {product.image ? (
-                                                            <img src={`${BASE_URL}/uploads/logos/${product.image}`} alt={product.name} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6, border: '1px solid #eee' }} onClick={(e) => { e.stopPropagation(); navigate(`/products/${product._id}/details`); }} />
-                                                        ) : <span className="text-muted">No Image</span>}
-                                                    </td>
-                                                    <td className="fw-bold text-end">{formatCurrency(product.salePrice)}</td>
-                                                    <td className="fw-bold text-end">{formatCurrency(product.purchasePrice)}</td>
-                                                    <td>{product.openingStock ?? '-'}</td>
-                                                    <td>{product.lowStockAlert ?? '-'}</td>
-                                                    <td>{product.HSN || '-'}</td>
-                                                    <td>{product.GST || '-'}</td>
-                                                    <td>
-                                                        <div className="d-flex gap-1">
-                                                            <button className="main-data-icon-btn" onClick={(e) => { e.stopPropagation(); handleEdit(product); }} title="Edit Product"><FaEdit /></button>
-                                                            <button className="main-data-icon-btn text-danger" onClick={(e) => { e.stopPropagation(); handleDelete(product._id); }} title="Delete Product"><FaTrash /></button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div className="main-data-table-wrapper">
+                            <table className="main-data-table product-table">
+                                <thead>
+                                    <tr>
+                                        <th style={{ textAlign: 'left' }}>NAME</th>
+                                        <th style={{ textAlign: 'left' }}>IMAGE</th>
+                                        <th style={{ textAlign: 'right' }}>SALE PRICE</th>
+                                        <th style={{ textAlign: 'right' }}>PURCHASE PRICE</th>
+                                        <th style={{ textAlign: 'left' }}>STOCK</th>
+                                        <th style={{ textAlign: 'left' }}>LOW ALERT</th>
+                                        <th style={{ textAlign: 'left' }}>HSN</th>
+                                        <th style={{ textAlign: 'left' }}>GST</th>
+                                        <th style={{ textAlign: 'left' }}>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {productsLoading ? (
+                                        <tr><td colSpan="9" className="text-center py-4">Loading products...</td></tr>
+                                    ) : filteredProducts.length === 0 ? (
+                                        <tr><td colSpan="9" className="text-center py-4">{search ? 'No products match your search.' : 'No products found. Add your first product!'}</td></tr>
+                                    ) : (
+                                        filteredProducts.map(product => (
+                                            <tr key={product._id} className="main-data-table-row" style={{ cursor: 'pointer' }} onClick={() => navigate(`/products/${product._id}/details`)}>
+                                                <td style={{ textAlign: 'left' }}>
+                                                    <div className="fw-medium text-dark">{product.name}</div>
+                                                    {product.note && <small className="text-muted d-block">{product.note}</small>}
+                                                </td>
+                                                <td style={{ textAlign: 'left' }}>
+                                                    {product.image ? (
+                                                        <img src={getImageUrl(product.image)} alt={product.name} style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6, border: '1px solid #eee' }} onClick={(e) => { e.stopPropagation(); navigate(`/products/${product._id}/details`); }} />
+                                                    ) : <span className="text-muted">No Image</span>}
+                                                </td>
+                                                <td className="fw-bold" style={{ textAlign: 'right' }}>{formatCurrency(product.salePrice)}</td>
+                                                <td className="fw-bold" style={{ textAlign: 'right' }}>{formatCurrency(product.purchasePrice)}</td>
+                                                <td style={{ textAlign: 'left' }}>{product.openingStock ?? '-'}</td>
+                                                <td style={{ textAlign: 'left' }}>{product.lowStockAlert ?? '-'}</td>
+                                                <td style={{ textAlign: 'left' }}>{product.HSN || '-'}</td>
+                                                <td style={{ textAlign: 'left' }}>{product.GST || '-'}</td>
+                                                <td>
+                                                    <div className="action-buttons">
+                                                        <button className="btn-edit" onClick={(e) => { e.stopPropagation(); handleEdit(product); }} title="Edit Product"><FaEdit /></button>
+                                                        <button className="btn-delete-icon" onClick={(e) => { e.stopPropagation(); handleDelete(product._id); }} title="Delete Product"><FaTrash /></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
 
                         {productModalOpen && (

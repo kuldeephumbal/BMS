@@ -243,13 +243,13 @@ export default function ProductDetail() {
                                 <table className="main-data-table">
                                     <thead>
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Type</th>
-                                            <th className="text-end">Quantity</th>
-                                            <th className="text-end">Purchase Price</th>
-                                            <th className="text-end">Total</th>
-                                            <th>Note</th>
-                                            <th>Actions</th>
+                                            <th style={{ textAlign: 'left' }}>DATE</th>
+                                            <th style={{ textAlign: 'left' }}>TYPE</th>
+                                            <th style={{ textAlign: 'right' }}>QUANTITY</th>
+                                            <th style={{ textAlign: 'right' }}>PURCHASE PRICE</th>
+                                            <th style={{ textAlign: 'right' }}>TOTAL</th>
+                                            <th style={{ textAlign: 'left' }}>NOTE</th>
+                                            <th style={{ textAlign: 'left' }}>ACTIONS</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -260,16 +260,16 @@ export default function ProductDetail() {
                                         ) : (
                                             records.map(r => (
                                                 <tr key={r._id} className="main-data-table-row">
-                                                    <td>{formatDate(r.date)}</td>
-                                                    <td className={r.type === 'IN' ? 'text-success fw-semibold' : 'text-danger fw-semibold'}>{r.type}</td>
-                                                    <td className="text-end">{r.quantity}</td>
-                                                    <td className="text-end">{formatCurrency(r.purchasePrice)}</td>
-                                                    <td className="text-end">{formatCurrency(r.purchasePrice * r.quantity)}</td>
-                                                    <td>{r.note || '-'}</td>
+                                                    <td style={{ textAlign: 'left' }}>{formatDate(r.date)}</td>
+                                                    <td className={r.type === 'IN' ? 'text-success fw-semibold' : 'text-danger fw-semibold'} style={{ textAlign: 'left' }}>{r.type}</td>
+                                                    <td style={{ textAlign: 'right' }}>{r.quantity}</td>
+                                                    <td style={{ textAlign: 'right' }}>{formatCurrency(r.purchasePrice)}</td>
+                                                    <td style={{ textAlign: 'right' }}>{formatCurrency(r.purchasePrice * r.quantity)}</td>
+                                                    <td style={{ textAlign: 'left' }}>{r.note || '-'}</td>
                                                     <td>
-                                                        <div className="d-flex gap-1">
-                                                            <button className="main-data-icon-btn" onClick={() => openEditStock(r)} title="Edit"><FaEdit /></button>
-                                                            <button className="main-data-icon-btn text-danger" onClick={() => handleDeleteStock(r)} title="Delete"><FaTrash /></button>
+                                                        <div className="action-buttons">
+                                                            <button className="btn-edit" onClick={() => openEditStock(r)} title="Edit"><FaEdit /></button>
+                                                            <button className="btn-delete-icon" onClick={() => handleDeleteStock(r)} title="Delete"><FaTrash /></button>
                                                         </div>
                                                     </td>
                                                 </tr>

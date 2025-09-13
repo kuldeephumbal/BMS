@@ -571,9 +571,6 @@ export default function ExpenseBudget() {
                         {/* Page Header with Toggle Buttons */}
                         <div className="main-data-header-row">
                             <div className="d-flex align-items-center justify-content-between w-100">
-                                <h1 className="main-data-page-title">
-                                    Expense & Budget Management
-                                </h1>
                                 <div className="expense-budget-toggle">
                                     <div className="btn-group" role="group">
                                         <button
@@ -601,311 +598,279 @@ export default function ExpenseBudget() {
                         <div className="row">
                             {/* Expenses Section */}
                             <div className={`col-12 ${activeTab === 'expenses' ? 'd-block' : 'd-none'}`}>
-                                <div className="common-card">
-                                    <div className="common-card-header d-flex align-items-center justify-content-between">
-                                        <div className='d-flex align-items-center justify-content-between gap-2'>
-                                            <div>
-                                                <div style={{ position: 'relative', maxWidth: '400px' }}>
-                                                    <FaSearch
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            left: '16px',
-                                                            transform: 'translateY(-50%)',
-                                                            color: '#888',
-                                                            fontSize: '16px',
-                                                            zIndex: 1
-                                                        }}
-                                                    />
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Search here..."
-                                                        value={expenseSearch}
-                                                        onChange={(e) => setExpenseSearch(e.target.value)}
-                                                        style={{
-                                                            width: '100%',
-                                                            padding: '12px 16px 12px 40px',
-                                                            border: '1.5px solid #e0e0e0',
-                                                            borderRadius: '10px',
-                                                            fontSize: '1rem',
-                                                            outline: 'none',
-                                                            backgroundColor: '#fff',
-                                                            transition: 'border-color 0.2s'
-                                                        }}
-                                                        onFocus={(e) => {
-                                                            e.target.style.borderColor = '#232526';
-                                                        }}
-                                                        onBlur={(e) => {
-                                                            e.target.style.borderColor = '#e0e0e0';
-                                                        }}
-                                                    />
-                                                </div>
+                                <div className="main-data-header-row">
+                                    <div className="d-flex align-items-center justify-content-between w-100">
+                                        <div className="d-flex align-items-center gap-3">
+                                            <h2 className="main-data-page-title d-flex align-items-center gap-2">
+                                                Expenses
+                                            </h2>
+                                            <div style={{ position: 'relative', maxWidth: '400px' }}>
+                                                <FaSearch
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        left: '16px',
+                                                        transform: 'translateY(-50%)',
+                                                        color: '#888',
+                                                        fontSize: '16px',
+                                                        zIndex: 1
+                                                    }}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search here..."
+                                                    value={expenseSearch}
+                                                    onChange={(e) => setExpenseSearch(e.target.value)}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '12px 16px 12px 40px',
+                                                        border: '1.5px solid #e0e0e0',
+                                                        borderRadius: '10px',
+                                                        fontSize: '1rem',
+                                                        outline: 'none',
+                                                        backgroundColor: '#fff',
+                                                        transition: 'border-color 0.2s'
+                                                    }}
+                                                    onFocus={(e) => {
+                                                        e.target.style.borderColor = '#232526';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.target.style.borderColor = '#e0e0e0';
+                                                    }}
+                                                />
                                             </div>
                                         </div>
-                                        <button
-                                            className="btn-primary-add"
-                                            onClick={() => {
-                                                setExpenseError('');
-                                                setExpenseModalOpen(true);
-                                            }}
-                                        >
-                                            <FaPlus /> Add Expense
-                                        </button>
+                                        <div className="d-flex align-items-center gap-3">
+                                            <button
+                                                className="btn-primary-add"
+                                                onClick={() => {
+                                                    setExpenseError('');
+                                                    setExpenseModalOpen(true);
+                                                }}
+                                            >
+                                                <FaPlus /> Add Expense
+                                            </button>
+                                        </div>
                                     </div>
+                                </div>
 
-                                    {/* Expense Table */}
-                                    <div className="main-data-table-wrapper">
-                                        <table className="main-data-table">
-                                            <thead>
+                                <div className="main-data-table-wrapper">
+                                    <table className="main-data-table">
+                                        <thead>
+                                            <tr>
+                                                <th style={{ textAlign: 'left' }}>CATEGORY</th>
+                                                <th style={{ textAlign: 'right' }}>AMOUNT</th>
+                                                <th style={{ textAlign: 'left' }}>DATE</th>
+                                                <th style={{ textAlign: 'left' }}>ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {expensesLoading ? (
                                                 <tr>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Category
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Amount
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Date
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Actions
-                                                        </div>
-                                                    </th>
+                                                    <td colSpan="4" className="text-center py-4">
+                                                        Loading expenses...
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                {expensesLoading ? (
-                                                    <tr>
-                                                        <td colSpan="4" className="text-center py-4">
-                                                            Loading expenses...
+                                            ) : getFilteredExpenses().length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="4" className="text-center py-4">
+                                                        {expenseSearch
+                                                            ? 'No expenses found matching your criteria.'
+                                                            : 'No expenses found. Add your first expense!'}
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                getFilteredExpenses().map((expense) => (
+                                                    <tr key={expense._id} className="main-data-table-row">
+                                                        <td>
+                                                            <div>
+                                                                <div className="fw-medium">
+                                                                    {expense.category?.name || getCategoryName(expense.category)}
+                                                                </div>
+                                                                {expense.note && (
+                                                                    <small className="text-muted">{expense.note}</small>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="fw-bold text-danger" style={{ textAlign: 'right' }}>
+                                                            {formatCurrency(expense.amount)}
+                                                        </td>
+                                                        <td style={{ textAlign: 'left' }}>{formatDate(expense.date)}</td>
+                                                        <td>
+                                                            <div className="action-buttons">
+                                                                <button
+                                                                    className="btn-edit"
+                                                                    onClick={() => handleEditExpense(expense)}
+                                                                    title="Edit Expense"
+                                                                >
+                                                                    <FaEdit />
+                                                                </button>
+                                                                <button
+                                                                    className="btn-delete-icon"
+                                                                    onClick={() => handleDeleteExpense(expense._id)}
+                                                                    title="Delete Expense"
+                                                                >
+                                                                    <FaTrash />
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
-                                                ) : getFilteredExpenses().length === 0 ? (
-                                                    <tr>
-                                                        <td colSpan="4" className="text-center py-4">
-                                                            {expenseSearch
-                                                                ? 'No expenses found matching your criteria.'
-                                                                : 'No expenses found. Add your first expense!'}
-                                                        </td>
-                                                    </tr>
-                                                ) : (
-                                                    getFilteredExpenses().map((expense) => (
-                                                        <tr key={expense._id} className="main-data-table-row">
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            {/* Budgets Section */}
+                            <div className={`col-12 ${activeTab === 'budgets' ? 'd-block' : 'd-none'}`}>
+                                <div className="main-data-header-row">
+                                    <div className="d-flex align-items-center justify-content-between w-100">
+                                        <div className="d-flex align-items-center gap-3">
+                                            <h2 className="main-data-page-title d-flex align-items-center gap-2">
+                                                Budgets
+                                            </h2>
+                                            <div style={{ position: 'relative', maxWidth: '400px' }}>
+                                                <FaSearch
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        left: '16px',
+                                                        transform: 'translateY(-50%)',
+                                                        color: '#888',
+                                                        fontSize: '16px',
+                                                        zIndex: 1
+                                                    }}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search here..."
+                                                    value={budgetSearch}
+                                                    onChange={(e) => setBudgetSearch(e.target.value)}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '12px 16px 12px 40px',
+                                                        border: '1.5px solid #e0e0e0',
+                                                        borderRadius: '10px',
+                                                        fontSize: '1rem',
+                                                        outline: 'none',
+                                                        backgroundColor: '#fff',
+                                                        transition: 'border-color 0.2s'
+                                                    }}
+                                                    onFocus={(e) => {
+                                                        e.target.style.borderColor = '#232526';
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        e.target.style.borderColor = '#e0e0e0';
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="d-flex align-items-center gap-3">
+                                            <button
+                                                className="btn-primary-add"
+                                                onClick={() => {
+                                                    setBudgetError('');
+                                                    setBudgetModalOpen(true);
+                                                }}
+                                            >
+                                                <FaPlus /> Add Budget
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="main-data-table-wrapper">
+                                    <table className="main-data-table">
+                                        <thead>
+                                            <tr>
+                                                <th style={{ textAlign: 'left' }}>CATEGORY</th>
+                                                <th style={{ textAlign: 'right' }}>BUDGET</th>
+                                                <th style={{ textAlign: 'right' }}>SPENT</th>
+                                                <th style={{ textAlign: 'left' }}>STATUS</th>
+                                                <th style={{ textAlign: 'left' }}>ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {budgetsLoading ? (
+                                                <tr>
+                                                    <td colSpan="5" className="text-center py-4">
+                                                        Loading budgets...
+                                                    </td>
+                                                </tr>
+                                            ) : getFilteredBudgets().length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="5" className="text-center py-4">
+                                                        {budgetSearch
+                                                            ? 'No budgets found matching your criteria.'
+                                                            : 'No budgets found. Add your first budget!'}
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                getFilteredBudgets().map((budget) => {
+                                                    const spent = getSpentAmount(budget);
+                                                    const status = getBudgetStatus(budget);
+                                                    const percentage = Math.min((spent / budget.amount) * 100, 100);
+
+                                                    return (
+                                                        <tr key={budget._id} className="main-data-table-row">
                                                             <td>
                                                                 <div>
                                                                     <div className="fw-medium">
-                                                                        {expense.category?.name || getCategoryName(expense.category)}
+                                                                        {budget.category?.name || getCategoryName(budget.category)}
                                                                     </div>
-                                                                    {expense.note && (
-                                                                        <small className="text-muted">{expense.note}</small>
+                                                                    <small className="text-muted">{budget.month}</small>
+                                                                    {budget.note && (
+                                                                        <small className="text-muted d-block">{budget.note}</small>
                                                                     )}
                                                                 </div>
                                                             </td>
-                                                            <td className="fw-bold text-danger">
-                                                                {formatCurrency(expense.amount)}
+                                                            <td className="fw-bold" style={{ textAlign: 'right' }}>
+                                                                {formatCurrency(budget.amount)}
                                                             </td>
-                                                            <td>{formatDate(expense.date)}</td>
+                                                            <td className="fw-bold text-danger" style={{ textAlign: 'right' }}>
+                                                                {formatCurrency(spent)}
+                                                            </td>
                                                             <td>
-                                                                <div className="d-flex gap-1">
+                                                                <div>
+                                                                    <div className="progress mb-1" style={{ height: '6px' }}>
+                                                                        <div
+                                                                            className="progress-bar"
+                                                                            style={{
+                                                                                width: `${percentage}%`,
+                                                                                backgroundColor: status.color
+                                                                            }}
+                                                                        ></div>
+                                                                    </div>
+                                                                    <small style={{ color: status.color }}>
+                                                                        {percentage.toFixed(1)}%
+                                                                    </small>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div className="action-buttons">
                                                                     <button
-                                                                        className="main-data-icon-btn"
-                                                                        onClick={() => handleEditExpense(expense)}
-                                                                        title="Edit Expense"
+                                                                        className="btn-edit"
+                                                                        onClick={() => handleEditBudget(budget)}
+                                                                        title="Edit Budget"
                                                                     >
                                                                         <FaEdit />
                                                                     </button>
                                                                     <button
-                                                                        className="main-data-icon-btn text-danger"
-                                                                        onClick={() => handleDeleteExpense(expense._id)}
-                                                                        title="Delete Expense"
+                                                                        className="btn-delete-icon"
+                                                                        onClick={() => handleDeleteBudget(budget._id)}
+                                                                        title="Delete Budget"
                                                                     >
                                                                         <FaTrash />
                                                                     </button>
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                    ))
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Budgets Section */}
-                            <div className={`col-12 ${activeTab === 'budgets' ? 'd-block' : 'd-none'}`}>
-                                <div className="common-card">
-                                    <div className="common-card-header d-flex align-items-center justify-content-between">
-                                        <div className='d-flex align-items-center justify-content-between gap-2'>
-                                            <div>
-                                                <div style={{ position: 'relative', maxWidth: '400px' }}>
-                                                    <FaSearch
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            left: '16px',
-                                                            transform: 'translateY(-50%)',
-                                                            color: '#888',
-                                                            fontSize: '16px',
-                                                            zIndex: 1
-                                                        }}
-                                                    />
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Search here..."
-                                                        value={budgetSearch}
-                                                        onChange={(e) => setBudgetSearch(e.target.value)}
-                                                        style={{
-                                                            width: '100%',
-                                                            padding: '12px 16px 12px 40px',
-                                                            border: '1.5px solid #e0e0e0',
-                                                            borderRadius: '10px',
-                                                            fontSize: '1rem',
-                                                            outline: 'none',
-                                                            backgroundColor: '#fff',
-                                                            transition: 'border-color 0.2s'
-                                                        }}
-                                                        onFocus={(e) => {
-                                                            e.target.style.borderColor = '#232526';
-                                                        }}
-                                                        onBlur={(e) => {
-                                                            e.target.style.borderColor = '#e0e0e0';
-                                                        }}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button
-                                            className="btn-primary-add"
-                                            onClick={() => {
-                                                setBudgetError('');
-                                                setBudgetModalOpen(true);
-                                            }}
-                                        >
-                                            <FaPlus /> Add Budget
-                                        </button>
-                                    </div>
-
-                                    {/* Budget Table */}
-                                    <div className="main-data-table-wrapper">
-                                        <table className="main-data-table">
-                                            <thead>
-                                                <tr>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Category
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Budget
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Spent
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Status
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            Actions
-                                                        </div>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {budgetsLoading ? (
-                                                    <tr>
-                                                        <td colSpan="5" className="text-center py-4">
-                                                            Loading budgets...
-                                                        </td>
-                                                    </tr>
-                                                ) : getFilteredBudgets().length === 0 ? (
-                                                    <tr>
-                                                        <td colSpan="5" className="text-center py-4">
-                                                            {budgetSearch
-                                                                ? 'No budgets found matching your criteria.'
-                                                                : 'No budgets found. Add your first budget!'}
-                                                        </td>
-                                                    </tr>
-                                                ) : (
-                                                    getFilteredBudgets().map((budget) => {
-                                                        const spent = getSpentAmount(budget);
-                                                        const status = getBudgetStatus(budget);
-                                                        const percentage = Math.min((spent / budget.amount) * 100, 100);
-
-                                                        return (
-                                                            <tr key={budget._id} className="main-data-table-row">
-                                                                <td>
-                                                                    <div>
-                                                                        <div className="fw-medium">
-                                                                            {budget.category?.name || getCategoryName(budget.category)}
-                                                                        </div>
-                                                                        <small className="text-muted">{budget.month}</small>
-                                                                        {budget.note && (
-                                                                            <small className="text-muted d-block">{budget.note}</small>
-                                                                        )}
-                                                                    </div>
-                                                                </td>
-                                                                <td className="fw-bold">
-                                                                    {formatCurrency(budget.amount)}
-                                                                </td>
-                                                                <td className="fw-bold text-danger">
-                                                                    {formatCurrency(spent)}
-                                                                </td>
-                                                                <td>
-                                                                    <div>
-                                                                        <div className="progress mb-1" style={{ height: '6px' }}>
-                                                                            <div
-                                                                                className="progress-bar"
-                                                                                style={{
-                                                                                    width: `${percentage}%`,
-                                                                                    backgroundColor: status.color
-                                                                                }}
-                                                                            ></div>
-                                                                        </div>
-                                                                        <small style={{ color: status.color }}>
-                                                                            {percentage.toFixed(1)}%
-                                                                        </small>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div className="d-flex gap-1">
-                                                                        <button
-                                                                            className="main-data-icon-btn"
-                                                                            onClick={() => handleEditBudget(budget)}
-                                                                            title="Edit Budget"
-                                                                        >
-                                                                            <FaEdit />
-                                                                        </button>
-                                                                        <button
-                                                                            className="main-data-icon-btn text-danger"
-                                                                            onClick={() => handleDeleteBudget(budget._id)}
-                                                                            title="Delete Budget"
-                                                                        >
-                                                                            <FaTrash />
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    })
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                    );
+                                                })
+                                            )}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

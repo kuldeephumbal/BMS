@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import ConfirmModal from '../components/ConfirmModal';
-import { FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaUser, FaPhone, FaEnvelope, FaMapMarkerAlt, FaSearch, FaTimes } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaSearch, FaTimes } from 'react-icons/fa';
 
 export default function Parties() {
     const navigate = useNavigate();
@@ -482,48 +482,20 @@ export default function Parties() {
                             ) : (
                                 <>
                                     <div className="modern-table-container">
-                                        <table className="main-data-table modern-data-table">
+                                        <table className="main-data-table">
                                             <thead>
                                                 <tr>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            <FaUser className="table-header-icon" />
-                                                            <span className="table-header-text">Name</span>
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            <FaPhone className="table-header-icon" />
-                                                            <span className="table-header-text">Contact</span>
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            <FaEnvelope className="table-header-icon" />
-                                                            <span className="table-header-text">Email</span>
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            <FaMapMarkerAlt className="table-header-icon" />
-                                                            <span className="table-header-text">Location</span>
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell">
-                                                        <div className="table-header-content">
-                                                            <span className="table-header-text">Balance</span>
-                                                        </div>
-                                                    </th>
-                                                    <th className="table-header-cell actions-column">
-                                                        <div className="table-header-content">
-                                                            <span className="table-header-text">Actions</span>
-                                                        </div>
-                                                    </th>
+                                                    <th style={{ textAlign: 'left' }}>NAME</th>
+                                                    <th style={{ textAlign: 'left' }}>CONTACT</th>
+                                                    <th style={{ textAlign: 'left' }}>EMAIL</th>
+                                                    <th style={{ textAlign: 'left' }}>LOCATION</th>
+                                                    <th style={{ textAlign: 'right' }}>BALANCE</th>
+                                                    <th style={{ textAlign: 'left' }}>ACTIONS</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {parties.map((party, idx) => (
-                                                    <tr key={party._id} className="modern-table-row" onClick={() => navigate(`/parties/${party._id}/details`)}>
+                                                    <tr key={party._id} className="modern-table-row" style={{ cursor: 'pointer' }} onClick={() => navigate(`/parties/${party._id}/details`)}>
                                                         <td className="table-cell name-cell">
                                                             <div className="name-content">
                                                                 <div className="party-avatar">
@@ -566,7 +538,7 @@ export default function Parties() {
                                                                 )}
                                                             </div>
                                                         </td>
-                                                        <td className="table-cell balance-cell">
+                                                        <td className="table-cell balance-cell" style={{ textAlign: 'right' }}>
                                                             <div className="balance-content">
                                                                 <div className={`balance-amount ${party.balance >= 0 ? 'positive' : 'negative'}`}>
                                                                     ₹{Math.abs(party.balance || 0).toLocaleString('en-IN')}
@@ -576,12 +548,12 @@ export default function Parties() {
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td className="table-cell actions-cell" onClick={(e) => e.stopPropagation()}>
+                                                        <td onClick={(e) => e.stopPropagation()} >
                                                             <div className="action-buttons">
-                                                                <button className="action-btn edit-btn" title="Edit" onClick={() => handleOpenEdit(party)}>
+                                                                <button className="btn-edit" title="Edit" onClick={() => handleOpenEdit(party)}>
                                                                     <FaEdit />
                                                                 </button>
-                                                                <button className="action-btn delete-btn" title="Delete" onClick={() => handleDeleteParty(party._id)}>
+                                                                <button className="btn-delete-icon" title="Delete" onClick={() => handleDeleteParty(party._id)}>
                                                                     <FaTrash />
                                                                 </button>
                                                             </div>

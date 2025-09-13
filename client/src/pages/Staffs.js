@@ -340,7 +340,7 @@ export default function Staffs() {
                         <div className="main-data-header-row">
                             <div className='d-flex align-items-center justify-content-between gap-2'>
                                 <h1 className="main-data-page-title">
-                                    Staff Management
+                                    Staffs
                                 </h1>
                                 <div>
                                     <div style={{ position: 'relative', maxWidth: '400px' }}>
@@ -396,36 +396,12 @@ export default function Staffs() {
                             <table className="main-data-table">
                                 <thead>
                                     <tr>
-                                        <th className="table-header-cell">
-                                            <div className="table-header-content">
-                                                #
-                                            </div>
-                                        </th>
-                                        <th className="table-header-cell">
-                                            <div className="table-header-content">
-                                                Name
-                                            </div>
-                                        </th>
-                                        <th className="table-header-cell">
-                                            <div className="table-header-content">
-                                                Email
-                                            </div>
-                                        </th>
-                                        <th className="table-header-cell">
-                                            <div className="table-header-content">
-                                                Phone
-                                            </div>
-                                        </th>
-                                        <th className="table-header-cell">
-                                            <div className="table-header-content">
-                                                Status
-                                            </div>
-                                        </th>
-                                        <th className="table-header-cell">
-                                            <div className="table-header-content">
-                                                Actions
-                                            </div>
-                                        </th>
+                                        <th style={{ textAlign: 'center' }}>#</th>
+                                        <th style={{ textAlign: 'left' }}>NAME</th>
+                                        <th style={{ textAlign: 'left' }}>EMAIL</th>
+                                        <th style={{ textAlign: 'left' }}>PHONE</th>
+                                        <th style={{ textAlign: 'left' }}>STATUS</th>
+                                        <th style={{ textAlign: 'left' }}>ACTIONS</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -447,7 +423,7 @@ export default function Staffs() {
                                                 <td style={{ textAlign: 'center', fontWeight: '600' }}>
                                                     {index + 1}
                                                 </td>
-                                                <td>
+                                                <td style={{ textAlign: 'left' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                         <div style={{
                                                             width: '32px',
@@ -468,19 +444,19 @@ export default function Staffs() {
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td style={{ textAlign: 'left' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                                         <FaEnvelope style={{ color: '#6c757d', fontSize: '12px' }} />
                                                         {member.email}
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td style={{ textAlign: 'left' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                                         <FaPhone style={{ color: '#6c757d', fontSize: '12px' }} />
                                                         {member.phone}
                                                     </div>
                                                 </td>
-                                                <td style={{ textAlign: 'center' }}>
+                                                <td style={{ textAlign: 'left' }}>
                                                     <span
                                                         style={{
                                                             display: 'inline-flex',
@@ -498,38 +474,29 @@ export default function Staffs() {
                                                         {member.is_active ? 'Active' : 'Inactive'}
                                                     </span>
                                                 </td>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+                                                <td>
+                                                    <div className="action-buttons">
                                                         <button
-                                                            className="main-data-icon-btn"
+                                                            className="btn-edit"
                                                             onClick={() => handleEdit(member)}
                                                             title="Edit Staff"
-                                                            style={{
-                                                                color: '#5e72e4',
-                                                                fontSize: '14px'
-                                                            }}
                                                         >
                                                             <FaEdit />
                                                         </button>
                                                         <button
-                                                            className="main-data-icon-btn"
+                                                            className="btn-toggle"
                                                             onClick={() => handleToggleStatus(member._id)}
                                                             title={member.is_active ? 'Deactivate' : 'Activate'}
                                                             style={{
-                                                                color: member.is_active ? '#ffc107' : '#28a745',
-                                                                fontSize: '14px'
+                                                                color: member.is_active ? '#ffc107' : '#28a745'
                                                             }}
                                                         >
                                                             {member.is_active ? <FaToggleOff /> : <FaToggleOn />}
                                                         </button>
                                                         <button
-                                                            className="main-data-icon-btn"
+                                                            className="btn-delete-icon"
                                                             onClick={() => handleDeleteClick(member)}
                                                             title="Delete Staff"
-                                                            style={{
-                                                                color: '#dc3545',
-                                                                fontSize: '14px'
-                                                            }}
                                                         >
                                                             <FaTrash />
                                                         </button>
