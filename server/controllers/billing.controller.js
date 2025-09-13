@@ -1,4 +1,36 @@
 const Billing = require('../models/billing.modal');
+const Product = require('../models/product.modal');
+
+// Helper function to update product stock
+const updateProductStock = async (products, type) => {
+    for (const product of products) {
+        try {
+            const prod = await Product.findById(product.id);
+            if (!prod) {
+                console.warn(`Product not found: ${product.id}`);
+                continue;
+            }
+
+            // Initialize currentStock if it doesn't exist
+            if (prod.currentStock === undefined || prod.currentStock === null) {
+                prod.currentStock = prod.openingStock;
+            }
+
+            let newStock;
+            if (type === 'sale') {
+                // Sales reduce stock
+                newStock = Math.max(0, prod.currentStock - product.quantity);
+            } else if (type === 'purchase') {
+                // Purchases increase stock
+                newStock = prod.currentStock + product.quantity;
+            }
+
+            await Product.findByIdAndUpdate(product.id, { currentStock: newStock });
+        } catch (error) {
+            console.error(`Error updating stock for product ${product.id}:`, error);
+        }
+    }
+};
 
 // Create Billing
 module.exports.createBilling = async (req, res) => {
@@ -75,6 +107,10 @@ module.exports.createBilling = async (req, res) => {
         });
 
         await doc.save();
+
+        // Update product stock after successful billing creation
+        await updateProductStock(products, type);
+
         return res.status(201).json({ message: 'Billing created successfully', billing: doc });
     } catch (error) {
         console.error('Create billing error:', error);
@@ -175,6 +211,9 @@ module.exports.updateBilling = async (req, res) => {
         const doc = await Billing.findById(id);
         if (!doc) return res.status(404).json({ message: 'Billing not found.' });
 
+        // Store original products for stock reversal
+        const originalProducts = doc.products;
+
         // Disallow changing businessId and type to avoid billNumber uniqueness issues
         if (businessId && String(businessId) !== String(doc.businessId)) {
             return res.status(400).json({ message: 'Changing businessId is not allowed for an existing bill.' });
@@ -224,6 +263,17 @@ module.exports.updateBilling = async (req, res) => {
         }
 
         await doc.save();
+
+        // Update stock if products changed
+        if (Array.isArray(products)) {
+            // First, reverse the original stock changes
+            const reversalProducts = originalProducts.map(p => ({ ...p, quantity: -p.quantity }));
+            await updateProductStock(reversalProducts, doc.type);
+
+            // Then apply the new stock changes
+            await updateProductStock(products, doc.type);
+        }
+
         return res.status(200).json({ message: 'Billing updated successfully', billing: doc });
     } catch (error) {
         console.error('Update billing error:', error);
@@ -237,6 +287,11 @@ module.exports.deleteBilling = async (req, res) => {
         const { id } = req.params;
         const doc = await Billing.findById(id);
         if (!doc) return res.status(404).json({ message: 'Billing not found.' });
+
+        // Reverse stock changes before deleting
+        const reversalProducts = doc.products.map(p => ({ ...p, quantity: -p.quantity }));
+        await updateProductStock(reversalProducts, doc.type);
+
         await Billing.findByIdAndDelete(id);
         return res.status(200).json({ message: 'Billing deleted successfully' });
     } catch (error) {

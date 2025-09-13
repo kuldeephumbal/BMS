@@ -1607,7 +1607,7 @@ input:focus {
 }
 
 .main-data-modal-form {
-    padding: 24px 28px;
+    padding: 24px 28px 0px 28px;
     overflow-y: auto;
     flex: 1;
     scrollbar-width: none;
@@ -1660,9 +1660,8 @@ input:focus {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    padding: 20px 28px;
+    padding: 20px 0px;
     border-top: 1px solid #f0f2f5;
-    background: #f8fafc;
     margin-top: auto;
     flex-shrink: 0;
 }
@@ -3601,8 +3600,15 @@ input:focus {
     box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
 }
 
-.billing-form-input:invalid {
+/* Only show red border when explicitly marked as invalid after user interaction */
+.billing-form-input.invalid-field {
     border-color: #e53e3e;
+}
+
+/* Never show red border while focused, even if invalid */
+.billing-form-input.invalid-field:focus {
+    border-color: #5e72e4;
+    box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
 }
 
 .billing-form-section {

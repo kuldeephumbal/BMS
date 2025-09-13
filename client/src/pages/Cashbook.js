@@ -290,10 +290,6 @@ export default function Cashbook() {
                                         {formError && <div className="main-data-modal-error">{formError}</div>}
                                         <div className="main-data-modal-row">
                                             <label className="main-data-modal-label" style={{ flex: 1 }}>
-                                                Active Business
-                                                <input type="text" value={activeBusiness?.business_name || 'Active Business'} className="main-data-modal-input" disabled />
-                                            </label>
-                                            <label className="main-data-modal-label" style={{ flex: 1 }}>
                                                 Amount *
                                                 <input type="number" name="amount" value={form.amount} onChange={handleChange} className="main-data-modal-input" placeholder="0" min="0" step="0.01" required />
                                             </label>
@@ -311,17 +307,15 @@ export default function Cashbook() {
                                                     <option value="online">Online</option>
                                                 </select>
                                             </label>
-                                        </div>
-                                        <div className="main-data-modal-row">
                                             <label className="main-data-modal-label" style={{ flex: 1 }}>
                                                 Date
                                                 <input type="date" name="date" value={form.date} onChange={handleChange} className="main-data-modal-input" />
                                             </label>
-                                            <label className="main-data-modal-label" style={{ flex: 2 }}>
-                                                Note
-                                                <input type="text" name="note" value={form.note} onChange={handleChange} className="main-data-modal-input" placeholder="Description (optional)" />
-                                            </label>
                                         </div>
+                                            <label className="main-data-modal-label">
+                                                Note
+                                                <textarea name="note" value={form.note} onChange={handleChange} className="main-data-modal-input" placeholder="Description (optional)" />
+                                            </label>
                                         <div className="main-data-modal-actions">
                                             <button type="button" className="btn-cancel" onClick={() => { setModalOpen(false); resetForm(); }}>Cancel</button>
                                             <button type="submit" className="btn-save">{editingEntry ? 'Update Entry' : 'Add Entry'}</button>

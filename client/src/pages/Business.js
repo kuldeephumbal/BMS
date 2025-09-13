@@ -474,16 +474,6 @@ export default function Business() {
                                                         </div>
                                                     )}
 
-                                                    {(business.city || business.state) && (
-                                                        <div className="business-detail-item">
-                                                            <FaMapMarkerAlt className="business-detail-icon" />
-                                                            <span>
-                                                                {[business.city, business.state].filter(Boolean).join(', ')}
-                                                                {business.pin_code && ` - ${business.pin_code}`}
-                                                            </span>
-                                                        </div>
-                                                    )}
-
                                                     {business.gst_number && (
                                                         <div className="business-detail-item">
                                                             <FaIdCard className="business-detail-icon" />

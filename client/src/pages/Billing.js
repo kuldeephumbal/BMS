@@ -11,7 +11,10 @@ import { FaChevronLeft, FaChevronRight, FaEdit, FaPlus, FaSearch, FaTrash } from
 export default function Billing() {
     const navigate = useNavigate();
     const { type } = useParams(); // sale | purchase
-    const billingType = ['sale', 'purchase'].includes(type) ? type : 'sale';
+    // Handle both singular and plural forms
+    const billingType = type === 'purchases' ? 'purchase' :
+        type === 'sales' ? 'sale' :
+            ['sale', 'purchase'].includes(type) ? type : 'sale';
 
     const [sidebarOpen, setSidebarOpen] = useState(() => {
         const saved = localStorage.getItem('sidebarOpen');
@@ -114,7 +117,9 @@ export default function Billing() {
         }).finally(() => setShowConfirmModal(false));
     };
 
-    const getTitle = useMemo(() => billingType === 'sale' ? 'Sales' : 'Purchases', [billingType]);
+    const getTitle = useMemo(() => {
+        return billingType === 'purchase' ? 'Purchases' : 'Sales';
+    }, [billingType]);
 
     if (!activeBusinessId) {
         return (
@@ -143,27 +148,25 @@ export default function Billing() {
                     <Header onToggleSidebar={handleToggleSidebar} />
                     <main className="main-content">
                         <div className="main-data-header-row">
-                            <div className="d-flex align-items-center justify-content-between w-100">
-                                <div className="d-flex align-items-center gap-3">
-                                    <h1 className="main-data-page-title d-flex align-items-center gap-2">{getTitle}</h1>
-                                    <div style={{ position: 'relative', maxWidth: 400 }}>
-                                        <FaSearch style={{ position: 'absolute', top: '50%', left: 16, transform: 'translateY(-50%)', color: '#888', fontSize: 16, zIndex: 1 }} />
-                                        <input
-                                            type="text"
-                                            placeholder="Search here..."
-                                            value={search}
-                                            onChange={e => setSearch(e.target.value)}
-                                            style={{ width: '100%', padding: '12px 16px 12px 40px', border: '1.5px solid #e0e0e0', borderRadius: '10px', fontSize: '1rem', outline: 'none', backgroundColor: '#fff' }}
-                                            onFocus={e => e.target.style.borderColor = '#232526'}
-                                            onBlur={e => e.target.style.borderColor = '#e0e0e0'}
-                                        />
-                                    </div>
+                            <div className="d-flex align-items-center justify-content-between gap-3">
+                                <h1 className="main-data-page-title">{getTitle}</h1>
+                                <div style={{ position: 'relative', maxWidth: 400 }}>
+                                    <FaSearch style={{ position: 'absolute', top: '50%', left: 16, transform: 'translateY(-50%)', color: '#888', fontSize: 16, zIndex: 1 }} />
+                                    <input
+                                        type="text"
+                                        placeholder="Search here..."
+                                        value={search}
+                                        onChange={e => setSearch(e.target.value)}
+                                        style={{ width: '100%', padding: '12px 16px 12px 40px', border: '1.5px solid #e0e0e0', borderRadius: '10px', fontSize: '1rem', outline: 'none', backgroundColor: '#fff' }}
+                                        onFocus={e => e.target.style.borderColor = '#232526'}
+                                        onBlur={e => e.target.style.borderColor = '#e0e0e0'}
+                                    />
                                 </div>
-                                <div className="d-flex align-items-center gap-3">
-                                    <button className="btn-primary-add" onClick={openCreateModal}>
-                                        <FaPlus /> Add {billingType === 'sale' ? 'Sale' : 'Purchase'}
-                                    </button>
-                                </div>
+                            </div>
+                            <div className="d-flex align-items-center gap-3">
+                                <button className="btn-primary-add" onClick={openCreateModal}>
+                                    <FaPlus /> Add {billingType === 'sale' ? 'Sale' : 'Purchase'}
+                                </button>
                             </div>
                         </div>
 

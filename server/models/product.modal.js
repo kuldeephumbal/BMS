@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
     purchasePrice: { type: Number, required: true, min: 0 },
     taxIncluded: { type: Boolean, default: false },
     openingStock: { type: Number, required: true, min: 0 },
+    currentStock: { type: Number, required: true, min: 0 }, // Current stock after transactions
     lowStockAlert: { type: Number, required: true, min: 0 },
     HSN: { type: String, trim: true },
     GST: { type: String, trim: true },

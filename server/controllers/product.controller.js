@@ -30,6 +30,7 @@ module.exports.createProduct = async (req, res) => {
             purchasePrice,
             taxIncluded: taxIncluded === 'true' || taxIncluded === true,
             openingStock: Number(openingStock),
+            currentStock: Number(openingStock), // Initialize currentStock with openingStock
             lowStockAlert: Number(lowStockAlert),
             HSN: HSN?.trim() || undefined,
             GST: GST?.trim() || undefined,
@@ -68,15 +69,24 @@ module.exports.getAllProducts = async (req, res) => {
             .skip(skip)
             .limit(parseInt(limit));
 
+        // Initialize currentStock for products that don't have it
+        const productsWithCurrentStock = await Promise.all(products.map(async (product) => {
+            if (product.currentStock === undefined || product.currentStock === null) {
+                await Product.findByIdAndUpdate(product._id, { currentStock: product.openingStock });
+                product.currentStock = product.openingStock;
+            }
+            return product;
+        }));
+
         const totalProducts = await Product.countDocuments(query);
 
         res.status(200).json({
             message: 'Products retrieved successfully',
-            count: products.length,
+            count: productsWithCurrentStock.length,
             totalProducts,
             currentPage: parseInt(page),
             totalPages: Math.ceil(totalProducts / parseInt(limit)),
-            products
+            products: productsWithCurrentStock
         });
     } catch (error) {
         console.error('Get all products error:', error);
@@ -129,6 +139,9 @@ module.exports.updateProduct = async (req, res) => {
         if (openingStock !== undefined) {
             if (openingStock < 0) return res.status(400).json({ message: 'openingStock must be >= 0.' });
             updateData.openingStock = openingStock;
+            // When updating openingStock, adjust currentStock to maintain the same difference
+            const stockDifference = product.currentStock - product.openingStock;
+            updateData.currentStock = openingStock + stockDifference;
         }
         if (lowStockAlert !== undefined) {
             if (lowStockAlert < 0) return res.status(400).json({ message: 'lowStockAlert must be >= 0.' });

@@ -235,7 +235,7 @@ export default function Profile() {
                                             <div className="profile-actions">
                                                 {!isEditing ? (
                                                     <button className="btn-edit" onClick={handleEdit}>
-                                                        <FaEdit /> Edit Profile
+                                                        <FaEdit />
                                                     </button>
                                                 ) : (
                                                     <div className="profile-edit-actions">

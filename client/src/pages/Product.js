@@ -363,7 +363,22 @@ export default function Product() {
                                                 </td>
                                                 <td className="fw-bold" style={{ textAlign: 'right' }}>{formatCurrency(product.salePrice)}</td>
                                                 <td className="fw-bold" style={{ textAlign: 'right' }}>{formatCurrency(product.purchasePrice)}</td>
-                                                <td style={{ textAlign: 'left' }}>{product.openingStock ?? '-'}</td>
+                                                <td style={{ textAlign: 'left' }}>
+                                                    {(() => {
+                                                        const currentStock = product.currentStock ?? product.openingStock ?? 0;
+                                                        const lowStockAlert = product.lowStockAlert ?? 0;
+                                                        const isLowStock = currentStock <= lowStockAlert;
+                                                        return (
+                                                            <span style={{
+                                                                color: isLowStock ? '#dc3545' : 'inherit',
+                                                                fontWeight: isLowStock ? 'bold' : 'normal'
+                                                            }}>
+                                                                {currentStock}
+                                                                {isLowStock && ' ⚠️'}
+                                                            </span>
+                                                        );
+                                                    })()}
+                                                </td>
                                                 <td style={{ textAlign: 'left' }}>{product.lowStockAlert ?? '-'}</td>
                                                 <td style={{ textAlign: 'left' }}>{product.HSN || '-'}</td>
                                                 <td style={{ textAlign: 'left' }}>{product.GST || '-'}</td>
@@ -424,15 +439,34 @@ export default function Product() {
                                             <label className="main-data-modal-label" style={{ flex: 1 }}>
                                                 Opening Stock *
                                                 <input type="number" name="openingStock" value={form.openingStock} onChange={handleChange} className="main-data-modal-input" placeholder="0" min="0" required />
+                                                <small className="text-muted">Initial stock when product was created</small>
                                             </label>
                                             <label className="main-data-modal-label" style={{ flex: 1 }}>
                                                 Low Stock Alert *
                                                 <input type="number" name="lowStockAlert" value={form.lowStockAlert} onChange={handleChange} className="main-data-modal-input" placeholder="0" min="0" required />
                                             </label>
-                                            <label className="main-data-modal-label" style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                <input type="checkbox" name="taxIncluded" checked={form.taxIncluded} onChange={handleChange} style={{ width: 18, height: 18 }} /> Tax Included
-                                            </label>
+                                            {editingProduct && (
+                                                <label className="main-data-modal-label" style={{ flex: 1 }}>
+                                                    Current Stock
+                                                    <input type="text" value={editingProduct.currentStock ?? editingProduct.openingStock ?? 0} className="main-data-modal-input" disabled />
+                                                    <small className="text-muted">Updated by sales/purchases</small>
+                                                </label>
+                                            )}
+                                            {!editingProduct && (
+                                                <label className="main-data-modal-label" style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                    <input type="checkbox" name="taxIncluded" checked={form.taxIncluded} onChange={handleChange} style={{ width: 18, height: 18 }} /> Tax Included
+                                                </label>
+                                            )}
                                         </div>
+
+                                        {editingProduct && (
+                                            <div className="main-data-modal-row">
+                                                <label className="main-data-modal-label" style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                    <input type="checkbox" name="taxIncluded" checked={form.taxIncluded} onChange={handleChange} style={{ width: 18, height: 18 }} /> Tax Included
+                                                </label>
+                                                <div style={{ flex: 2 }}></div>
+                                            </div>
+                                        )}
 
                                         <div className="main-data-modal-row">
                                             <label className="main-data-modal-label" style={{ flex: 1 }}>

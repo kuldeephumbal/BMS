@@ -39,6 +39,32 @@ export default function BillingForm({
 
     const [showOptional, setShowOptional] = useState(false);
     const [error, setError] = useState('');
+    const [invalidFields, setInvalidFields] = useState(new Set());
+
+    // Handle field blur to validate
+    const handleFieldBlur = (fieldName, value, isRequired = false) => {
+        // Check if field is invalid
+        const isInvalid = isRequired && (!value || value.toString().trim() === '');
+
+        setInvalidFields(prev => {
+            const newSet = new Set(prev);
+            if (isInvalid) {
+                newSet.add(fieldName);
+            } else {
+                newSet.delete(fieldName);
+            }
+            return newSet;
+        });
+    };
+
+    // Handle field focus to remove invalid styling while typing
+    const handleFieldFocus = (fieldName) => {
+        setInvalidFields(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(fieldName);
+            return newSet;
+        });
+    };
 
     // Photo file handling state
     const [photoFiles, setPhotoFiles] = useState([]);
@@ -580,7 +606,15 @@ export default function BillingForm({
                 <div className='row'>
                     <div className='col-md-6'>
                         <label className='billing-form-label' style={{ position: 'relative' }}>Party
-                            <input className='billing-form-input' value={partyQuery} onChange={(e) => { setPartyQuery(e.target.value); updateField('parties.name', e.target.value); }} placeholder={`Search ${partyType} name…`} required />
+                            <input
+                                className={`billing-form-input ${invalidFields.has('party-name') ? 'invalid-field' : ''}`}
+                                value={partyQuery}
+                                onChange={(e) => { setPartyQuery(e.target.value); updateField('parties.name', e.target.value); }}
+                                onFocus={() => handleFieldFocus('party-name')}
+                                onBlur={() => handleFieldBlur('party-name', partyQuery, true)}
+                                placeholder={`Search ${partyType} name…`}
+                                required
+                            />
                             {partyLoading && <div className='small' style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', color: '#888' }}>…</div>}
                             {partyOpts.length > 0 && (
                                 <div className='dropdown' style={{ position: 'absolute', zIndex: 10, background: '#fff', border: '1px solid #ddd', width: '100%', maxHeight: 180, overflowY: 'auto' }}>
@@ -595,7 +629,14 @@ export default function BillingForm({
                     </div>
                     <div className='col-md-6'>
                         <label className='billing-form-label'>Party Phone
-                            <input className='billing-form-input' value={values.parties.phone} onChange={(e) => updateField('parties.phone', e.target.value)} required />
+                            <input
+                                className={`billing-form-input ${invalidFields.has('party-phone') ? 'invalid-field' : ''}`}
+                                value={values.parties.phone}
+                                onChange={(e) => updateField('parties.phone', e.target.value)}
+                                onFocus={() => handleFieldFocus('party-phone')}
+                                onBlur={() => handleFieldBlur('party-phone', values.parties.phone, true)}
+                                required
+                            />
                         </label>
                     </div>
                 </div>
@@ -633,9 +674,16 @@ export default function BillingForm({
                     <div className='row' key={idx}>
                         <div className='col-md-5'>
                             <label className='billing-form-label' style={{ position: 'relative' }}>Product
-                                <input className='billing-form-input' value={productQueries[idx] ?? p.name ?? ''} onFocus={() => setActiveProductRow(idx)} onChange={(e) => {
-                                    const val = e.target.value; updateArrayItem('products', idx, 'name', val); setProductQueries(qs => { const n = [...qs]; n[idx] = val; return n; }); setActiveProductRow(idx);
-                                }} required />
+                                <input
+                                    className={`billing-form-input ${invalidFields.has(`product-${idx}`) ? 'invalid-field' : ''}`}
+                                    value={productQueries[idx] ?? p.name ?? ''}
+                                    onFocus={() => { setActiveProductRow(idx); handleFieldFocus(`product-${idx}`); }}
+                                    onChange={(e) => {
+                                        const val = e.target.value; updateArrayItem('products', idx, 'name', val); setProductQueries(qs => { const n = [...qs]; n[idx] = val; return n; }); setActiveProductRow(idx);
+                                    }}
+                                    onBlur={() => handleFieldBlur(`product-${idx}`, productQueries[idx] ?? p.name ?? '', true)}
+                                    required
+                                />
                                 {productLoading && activeProductRow === idx && <div className='small' style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', color: '#888' }}>…</div>}
                                 {activeProductRow === idx && productOpts.length > 0 && (
                                     <div className='dropdown' style={{ position: 'absolute', zIndex: 10, background: '#fff', border: '1px solid #ddd', width: '100%', maxHeight: 180, overflowY: 'auto' }}>
@@ -650,12 +698,30 @@ export default function BillingForm({
                         </div>
                         <div className='col-md-3'>
                             <label className='billing-form-label'>Qty
-                                <input type='number' min='1' className='billing-form-input' value={p.quantity} onChange={(e) => updateArrayItem('products', idx, 'quantity', e.target.value)} required />
+                                <input
+                                    type='number'
+                                    min='1'
+                                    className={`billing-form-input ${invalidFields.has(`quantity-${idx}`) ? 'invalid-field' : ''}`}
+                                    value={p.quantity}
+                                    onChange={(e) => updateArrayItem('products', idx, 'quantity', e.target.value)}
+                                    onFocus={() => handleFieldFocus(`quantity-${idx}`)}
+                                    onBlur={() => handleFieldBlur(`quantity-${idx}`, p.quantity, true)}
+                                    required
+                                />
                             </label>
                         </div>
                         <div className='col-md-3'>
                             <label className='billing-form-label'>Price
-                                <input type='number' min='0' className='billing-form-input' value={p.price} onChange={(e) => updateArrayItem('products', idx, 'price', e.target.value)} required />
+                                <input
+                                    type='number'
+                                    min='0'
+                                    className={`billing-form-input ${invalidFields.has(`price-${idx}`) ? 'invalid-field' : ''}`}
+                                    value={p.price}
+                                    onChange={(e) => updateArrayItem('products', idx, 'price', e.target.value)}
+                                    onFocus={() => handleFieldFocus(`price-${idx}`)}
+                                    onBlur={() => handleFieldBlur(`price-${idx}`, p.price, true)}
+                                    required
+                                />
                             </label>
                         </div>
                         <div className='col-md-1 d-flex align-items-center justify-content-center'>
@@ -1017,7 +1083,15 @@ export default function BillingForm({
                         <>
                             <div className='col-md-6'>
                                 <label className='billing-form-label'>Due Date *
-                                    <input type='date' className='billing-form-input' value={values.dueDate} onChange={(e) => setValues(v => ({ ...v, dueDate: e.target.value }))} required />
+                                    <input
+                                        type='date'
+                                        className={`billing-form-input ${invalidFields.has('due-date') ? 'invalid-field' : ''}`}
+                                        value={values.dueDate}
+                                        onChange={(e) => setValues(v => ({ ...v, dueDate: e.target.value }))}
+                                        onFocus={() => handleFieldFocus('due-date')}
+                                        onBlur={() => handleFieldBlur('due-date', values.dueDate, true)}
+                                        required
+                                    />
                                 </label>
                             </div>
                             <div className='col-md-6'>
@@ -1030,7 +1104,15 @@ export default function BillingForm({
                         <>
                             <div className='col-md-6'>
                                 <label className='billing-form-label'>Payment Date *
-                                    <input type='date' className='billing-form-input' value={values.date} onChange={(e) => setValues(v => ({ ...v, date: e.target.value }))} required />
+                                    <input
+                                        type='date'
+                                        className={`billing-form-input ${invalidFields.has('payment-date') ? 'invalid-field' : ''}`}
+                                        value={values.date}
+                                        onChange={(e) => setValues(v => ({ ...v, date: e.target.value }))}
+                                        onFocus={() => handleFieldFocus('payment-date')}
+                                        onBlur={() => handleFieldBlur('payment-date', values.date, true)}
+                                        required
+                                    />
                                 </label>
                             </div>
                             <div className='col-md-6'>
